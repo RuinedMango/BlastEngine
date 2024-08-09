@@ -1,0 +1,13 @@
+.{
+    .name = "BlastEngine",
+    .version = "0.0.0",
+
+    .dependencies = .{
+        .blasttracy = .{ .path = "libs/blasttracy" },
+        .blastglfw = .{ .path = "libs/blastglfw" },
+        .blastjni = .{ .path = "libs/blastjni" },
+    },
+    .paths = .{
+        "",
+    },
+}
