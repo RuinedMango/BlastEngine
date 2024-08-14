@@ -34,21 +34,24 @@ pub fn parseFeatures(root: *xml.Element, file: std.fs.File, alloc: std.mem.Alloc
     while (features.next()) |feature| {
         if (std.mem.eql(u8, feature.getAttribute("api").?, api)) {
             if (try std.fmt.parseFloat(f16, feature.getAttribute("number").?) <= try std.fmt.parseFloat(f16, version)) {
-                try parseRequire(feature, file, alloc);
+                try parseRequire(root, feature, file);
                 try parseRemove(feature, file, alloc);
             }
         }
     }
 }
 
-pub fn parseRequire(feature: *xml.Element, file: std.fs.File, alloc: std.mem.Allocator) !void {
+pub fn parseRequire(root: *xml.Element, feature: *xml.Element, file: std.fs.File) !void {
     var requires = feature.findChildrenByTag("require");
     while (requires.next()) |require| {
         if (require.getAttribute("profile") != null) {
             if (std.mem.eql(u8, require.getAttribute("profile").?, profile)) {
-                try parseRequireEnums(require, file, alloc);
-                try parseRequireCommands(require, file, alloc);
+                try parseRequireEnums(root, require, file);
+                try parseRequireCommands(root, require, file);
             }
+        } else {
+            try parseRequireEnums(root, require, file);
+            try parseRequireCommands(root, require, file);
         }
     }
 }
@@ -61,42 +64,94 @@ pub fn parseRemove(feature: *xml.Element, file: std.fs.File, alloc: std.mem.Allo
                 try parseRemoveEnums(remove, file, alloc);
                 try parseRemoveCommands(remove, file, alloc);
             }
+        } else {
+            try parseRemoveEnums(remove, file, alloc);
+            try parseRemoveCommands(remove, file, alloc);
         }
     }
 }
 
-pub fn parseRequireEnums(require: *xml.Element, file: std.fs.File, alloc: std.mem.Allocator) !void {
+pub fn parseRequireEnums(root: *xml.Element, require: *xml.Element, file: std.fs.File) !void {
     var enums = require.findChildrenByTag("enum");
     while (enums.next()) |constant| {
-        std.debug.print("{s}", .{constant.getAttribute("name").?});
-        _ = try file.write(try concat(alloc, constant.getAttribute("name").?, "\n"));
+        var enumContainer = root.findChildrenByTag("enums");
+        while (enumContainer.next()) |container| {
+            var values = container.findChildrenByTag("enum");
+            while (values.next()) |value| {
+                if (std.mem.eql(u8, value.getAttribute("name").?, constant.getAttribute("name").?)) {
+                    _ = try file.writer().print("pub const {s}: comptime_int = {s};\n", .{ constant.getAttribute("name").?, value.getAttribute("value").? });
+                }
+            }
+        }
     }
 }
 
-pub fn parseRequireCommands(require: *xml.Element, file: std.fs.File, alloc: std.mem.Allocator) !void {
+pub fn parseRequireCommands(root: *xml.Element, require: *xml.Element, file: std.fs.File) !void {
     var commands = require.findChildrenByTag("command");
     while (commands.next()) |function| {
-        _ = try file.write(try concat(alloc, function.getAttribute("name").?, "\n"));
+        var commandContainer = root.findChildrenByTag("commands");
+        while (commandContainer.next()) |container| {
+            var values = container.findChildrenByTag("command");
+            while (values.next()) |value| {
+                if (std.mem.eql(u8, value.findChildByTag("proto").?.getCharData("name").?, function.getAttribute("name").?)) {
+                    var i: u8 = 0;
+                    var lastparam = false;
+                    _ = try file.writer().print("pub fn {s}(", .{value.findChildByTag("proto").?.getCharData("name").?});
+                    var params = value.findChildrenByTag("param");
+                    while (params.next()) |param| {
+                        if (i > 0 and !lastparam) {
+                            _ = try file.writer().print(", ", .{});
+                        }
+                        _ = try file.writer().print("{s}: ", .{param.getCharData("name").?});
+                        if (param.findChildByTag("ptype") != null) {
+                            _ = try file.writer().print("{s}", .{param.getCharData("ptype").?});
+                        } else {
+                            _ = try file.writer().print("?*const anyopaque", .{});
+                        }
+                        i += 1;
+                    } else {
+                        lastparam = true;
+                        if (value.findChildByTag("proto").?.findChildByTag("ptype") != null) {
+                            _ = try file.writer().print(") {s}{{\n", .{value.findChildByTag("proto").?.getCharData("ptype").?});
+                        } else {
+                            _ = try file.writer().print(") void{{\n", .{});
+                        }
+                        _ = try file.writer().print("   return function_map.current.?.{s}(", .{function.getAttribute("name").?});
+                        var params2 = value.findChildrenByTag("param");
+                        var j: u8 = 0;
+                        var lastParamName = false;
+                        while (params2.next()) |param| {
+                            if (j > 0 and !lastParamName) {
+                                _ = try file.writer().print(", ", .{});
+                            }
+                            _ = try file.writer().print("{s}", .{param.getCharData("name").?});
+                            j += 1;
+                        } else {
+                            lastParamName = true;
+                            _ = try file.writer().print(");\n}}\n", .{});
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
 pub fn parseRemoveEnums(remove: *xml.Element, file: std.fs.File, alloc: std.mem.Allocator) !void {
     var enums = remove.findChildrenByTag("enum");
+    const all = try file.readToEndAlloc(alloc, 999999999);
     while (enums.next()) |constant| {
-        var i: i9 = 0;
-        while (std.mem.eql(u8, @ptrCast(try file.reader().readUntilDelimiterOrEofAlloc(alloc, '\n', 500)), constant.getAttribute("name").?)) {
-            i += 1;
-        }
+        std.debug.print("{s}", .{all});
+        _ = constant;
     }
 }
 
 pub fn parseRemoveCommands(remove: *xml.Element, file: std.fs.File, alloc: std.mem.Allocator) !void {
     var commands = remove.findChildrenByTag("command");
+    _ = file;
+    _ = alloc;
     while (commands.next()) |function| {
-        var i: i9 = 0;
-        while (std.mem.eql(u8, @ptrCast(try file.reader().readUntilDelimiterOrEofAlloc(alloc, '\n', 500)), function.getAttribute("name").?)) {
-            i += 1;
-        }
+        std.debug.print("{s}", .{function.getAttribute("name").?});
     }
 }
 
