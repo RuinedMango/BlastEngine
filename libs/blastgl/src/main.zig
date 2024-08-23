@@ -8,6 +8,8 @@ const profile = "core";
 pub fn main() !void {
     const file = try std.fs.cwd().createFile("gl.zig", .{ .read = true });
     defer file.close();
+    const tempFile = try std.fs.cwd().createFile("tempgl.zig", .{ .read = true });
+    defer tempFile.close();
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
     const allocator = arena.allocator();
@@ -26,16 +28,16 @@ pub fn main() !void {
         => return error.InvalidXml,
         error.OutOfMemory => return error.OutOfMemory,
     };
-    try parseFeatures(doc.root, file, allocator);
+    try parseFeatures(doc.root, tempFile, file, allocator);
 }
 
-pub fn parseFeatures(root: *xml.Element, file: std.fs.File, alloc: std.mem.Allocator) !void {
+pub fn parseFeatures(root: *xml.Element, tempFile: std.fs.File, file: std.fs.File, alloc: std.mem.Allocator) !void {
     var features = root.findChildrenByTag("feature");
     while (features.next()) |feature| {
         if (std.mem.eql(u8, feature.getAttribute("api").?, api)) {
             if (try std.fmt.parseFloat(f16, feature.getAttribute("number").?) <= try std.fmt.parseFloat(f16, version)) {
-                try parseRequire(root, feature, file);
-                try parseRemove(feature, file, alloc);
+                try parseRequire(root, feature, tempFile);
+                try parseRemove(root, feature, tempFile, file, alloc);
             }
         }
     }
@@ -56,17 +58,17 @@ pub fn parseRequire(root: *xml.Element, feature: *xml.Element, file: std.fs.File
     }
 }
 
-pub fn parseRemove(feature: *xml.Element, file: std.fs.File, alloc: std.mem.Allocator) !void {
+pub fn parseRemove(root: *xml.Element, feature: *xml.Element, tempFile: std.fs.File, file: std.fs.File, alloc: std.mem.Allocator) !void {
     var removes = feature.findChildrenByTag("remove");
     while (removes.next()) |remove| {
         if (remove.getAttribute("profile") != null) {
             if (std.mem.eql(u8, remove.getAttribute("profile").?, profile)) {
-                try parseRemoveEnums(remove, file, alloc);
-                try parseRemoveCommands(remove, file, alloc);
+                try parseRemoveEnums(root, remove, tempFile, file, alloc);
+                try parseRemoveCommands(root, remove, tempFile, file, alloc);
             }
         } else {
-            try parseRemoveEnums(remove, file, alloc);
-            try parseRemoveCommands(remove, file, alloc);
+            try parseRemoveEnums(root, remove, tempFile, file, alloc);
+            try parseRemoveCommands(root, remove, tempFile, file, alloc);
         }
     }
 }
@@ -136,22 +138,40 @@ pub fn parseRequireCommands(root: *xml.Element, require: *xml.Element, file: std
         }
     }
 }
-
-pub fn parseRemoveEnums(remove: *xml.Element, file: std.fs.File, alloc: std.mem.Allocator) !void {
+var iast: u8 = 0;
+pub fn parseRemoveEnums(root: *xml.Element, remove: *xml.Element, tempFile: std.fs.File, file: std.fs.File, alloc: std.mem.Allocator) !void {
     var enums = remove.findChildrenByTag("enum");
-    const all = try file.readToEndAlloc(alloc, 999999999);
+    try tempFile.seekTo(0);
+    const allFile = try tempFile.reader().readAllAlloc(alloc, (try tempFile.stat()).size);
+    const all = try alloc.alloc(u8, (try tempFile.stat()).size);
     while (enums.next()) |constant| {
-        std.debug.print("{s}", .{all});
-        _ = constant;
+        var enumContainer = root.findChildrenByTag("enums");
+        while (enumContainer.next()) |container| {
+            var values = container.findChildrenByTag("enum");
+            while (values.next()) |value| {
+                if (std.mem.eql(u8, value.getAttribute("name").?, constant.getAttribute("name").?)) {
+                    const variable = try std.fmt.allocPrint(alloc, "pub const {s}: comptime_int = {s};\n", .{ constant.getAttribute("name").?, value.getAttribute("value").? });
+                    _ = std.mem.replace(u8, allFile, variable, "", all);
+                }
+            }
+        }
     }
+    //all = try alloc.realloc(all[100..], 8);
+    if (!((iast % 2) == 0)) {
+        std.debug.print("{s}", .{all[0..]});
+        try file.writer().print("{s}", .{all[0..]});
+    }
+    iast += 1;
 }
 
-pub fn parseRemoveCommands(remove: *xml.Element, file: std.fs.File, alloc: std.mem.Allocator) !void {
+pub fn parseRemoveCommands(root: *xml.Element, remove: *xml.Element, tempFile: std.fs.File, file: std.fs.File, alloc: std.mem.Allocator) !void {
     var commands = remove.findChildrenByTag("command");
     _ = file;
     _ = alloc;
+    _ = tempFile;
+    _ = root;
     while (commands.next()) |function| {
-        std.debug.print("{s}", .{function.getAttribute("name").?});
+        _ = function;
     }
 }
 
