@@ -138,7 +138,6 @@ pub fn parseRequireCommands(root: *xml.Element, require: *xml.Element, file: std
         }
     }
 }
-var iast: u8 = 0;
 pub fn parseRemoveEnums(root: *xml.Element, remove: *xml.Element, tempFile: std.fs.File, file: std.fs.File, alloc: std.mem.Allocator) !void {
     var enums = remove.findChildrenByTag("enum");
     try tempFile.seekTo(0);
@@ -156,12 +155,8 @@ pub fn parseRemoveEnums(root: *xml.Element, remove: *xml.Element, tempFile: std.
             }
         }
     }
-    //all = try alloc.realloc(all[100..], 8);
-    if (!((iast % 2) == 0)) {
-        std.debug.print("{s}", .{all[0..]});
-        try file.writer().print("{s}", .{all[0..]});
-    }
-    iast += 1;
+    std.debug.print("{s}", .{all[0..]});
+    try file.writer().print("{s}", .{all[0..]});
 }
 
 pub fn parseRemoveCommands(root: *xml.Element, remove: *xml.Element, tempFile: std.fs.File, file: std.fs.File, alloc: std.mem.Allocator) !void {
