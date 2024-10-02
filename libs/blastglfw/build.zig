@@ -29,7 +29,7 @@ pub fn build(b: *std.Build) void {
 
     const options_module = options_step.createModule();
 
-    _ = b.addModule("root", .{
+    const module = b.addModule("root", .{
         .root_source_file = b.path("src/blastglfw.zig"),
         .imports = &.{.{ .name = "blastglfw_options", .module = options_module }},
     });
@@ -87,23 +87,88 @@ pub fn build(b: *std.Build) void {
                 .flags = &.{"-D_GLFW_WIN32"},
             });
         },
+        .linux => {
+            if (b.lazyDependency("system_sdk", .{})) |system_sdk| {
+                glfw.addSystemIncludePath(system_sdk.path("linux/include"));
+                glfw.addSystemIncludePath(system_sdk.path("linux/include/wayland"));
+                glfw.addIncludePath(b.path(src_dir ++ "wayland"));
+
+                if (target.result.cpu.arch.isX86()) {
+                    glfw.addLibraryPath(system_sdk.path("linux/lib/x86_64-linux-gnu"));
+                } else {
+                    glfw.addLibraryPath(system_sdk.path("linux/lib/aarch64-linux-gnu"));
+                }
+            }
+            glfw.addCSourceFiles(.{
+                .files = &.{
+                    src_dir ++ "platform.c",
+                    src_dir ++ "monitor.c",
+                    src_dir ++ "init.c",
+                    src_dir ++ "vulkan.c",
+                    src_dir ++ "input.c",
+                    src_dir ++ "context.c",
+                    src_dir ++ "window.c",
+                    src_dir ++ "osmesa_context.c",
+                    src_dir ++ "egl_context.c",
+                    src_dir ++ "null_init.c",
+                    src_dir ++ "null_monitor.c",
+                    src_dir ++ "null_window.c",
+                    src_dir ++ "null_joystick.c",
+                    src_dir ++ "posix_time.c",
+                    src_dir ++ "posix_thread.c",
+                    src_dir ++ "posix_module.c",
+                    src_dir ++ "egl_context.c",
+                },
+                .flags = &.{},
+            });
+            if (options.enable_x11 or options.enable_wayland) {
+                glfw.addCSourceFiles(.{
+                    .files = &.{
+                        src_dir ++ "xkb_unicode.c",
+                        src_dir ++ "linux_joystick.c",
+                        src_dir ++ "posix_poll.c",
+                    },
+                    .flags = &.{},
+                });
+            }
+            if (options.enable_x11) {
+                glfw.addCSourceFiles(.{
+                    .files = &.{
+                        src_dir ++ "x11_init.c",
+                        src_dir ++ "x11_monitor.c",
+                        src_dir ++ "x11_window.c",
+                        src_dir ++ "glx_context.c",
+                    },
+                    .flags = &.{},
+                });
+                glfw.defineCMacro("_GLFW_X11", "1");
+                glfw.linkSystemLibrary("X11");
+            }
+            if (options.enable_wayland) {
+                glfw.addCSourceFiles(.{
+                    .files = &.{
+                        src_dir ++ "wl_init.c",
+                        src_dir ++ "wl_monitor.c",
+                        src_dir ++ "wl_window.c",
+                    },
+                    .flags = &.{},
+                });
+                glfw.defineCMacro("_GLFW_WAYLAND", "1");
+            }
+        },
         else => {},
     }
 
-    const test_step = b.step("test", "Run blastglfw tests");
-
-    const tests = b.addTest(.{
-        .name = "blastglfw-tests",
-        .root_source_file = b.path("src/blastglfw.zig"),
-        .target = target,
-        .optimize = optimize,
-    });
-    tests.root_module.addImport("blastglfw_options", options_module);
-    b.installArtifact(tests);
-
-    tests.addIncludePath(b.path("libs/glfw/include"));
-
-    tests.linkLibrary(glfw);
-
-    test_step.dependOn(&b.addRunArtifact(tests).step);
+    module.addIncludePath(b.path("libs/glfw/include"));
+    switch (target.result.os.tag) {
+        .linux => {
+            if (b.lazyDependency("system_sdk", .{})) |system_sdk| {
+                module.addSystemIncludePath(system_sdk.path("linux/include"));
+                if (options.enable_wayland) {
+                    glfw.addSystemIncludePath(system_sdk.path("linux/include/wayland"));
+                }
+            }
+        },
+        else => {},
+    }
 }

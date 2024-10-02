@@ -6,6 +6,7 @@
         .blasttracy = .{ .path = "libs/blasttracy" },
         .blastglfw = .{ .path = "libs/blastglfw" },
         .blastjni = .{ .path = "libs/blastjni" },
+        .system_sdk = .{ .path = "libs/system-sdk" },
     },
     .paths = .{
         "",

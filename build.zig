@@ -32,6 +32,8 @@ pub fn build(b: *std.Build) void {
 
     const blastglfw = b.dependency("blastglfw", .{
         .target = target,
+        .wayland = true,
+        .x11 = false,
     });
     exe.root_module.addImport("blastglfw", blastglfw.module("root"));
     exe.linkLibrary(blastglfw.artifact("glfw"));

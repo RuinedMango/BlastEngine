@@ -1,12 +1,14 @@
 .{
     .name = "blastglfw",
     .version = "0.0.0",
-    .dependencies = .{},
     .paths = .{
         "build.zig",
         "build.zig.zon",
         "libs",
         "src",
         "README.md",
+    },
+    .dependencies = .{
+        .system_sdk = .{ .path = "../system-sdk" },
     },
 }
