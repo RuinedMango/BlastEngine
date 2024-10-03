@@ -53,7 +53,6 @@ pub fn build(b: *std.Build) void {
         .flags = &.{
             "-DTRACY_ENABLE",
             if (options.enable_fibers) "-DTRACY_FIBERS" else "",
-            "-D_WIN32_WINNT=0x601",
             "-fno-sanitize=undefined",
         },
     });
