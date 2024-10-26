@@ -3,6 +3,14 @@ const tracy = @import("blasttracy");
 const glfw = @import("blastglfw");
 
 pub fn main() !void {
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit();
+    const alloc = arena.allocator();
+    @setEvalBranchQuota(100000000);
+    inline for (0..100000000) |num| {
+        const tracy_zone = tracy.ZoneNC(@src(), try std.fmt.allocPrintZ(alloc, "Zone{}", .{num}), 0x00_ff_00_00);
+        defer tracy_zone.End();
+    }
     const tracy_zone = tracy.ZoneNC(@src(), "initScene", 0x00_ff_00_00);
     defer tracy_zone.End();
     try glfw.init();
