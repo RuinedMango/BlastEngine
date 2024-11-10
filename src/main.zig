@@ -5,7 +5,8 @@ const glfw = @import("blastglfw");
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
-    const tracy_zone = tracy.Zone 
+    const tracy_zone = tracy.ZoneN(@src(), "Ballin");
+    defer tracy_zone.End();
     try glfw.init();
     defer glfw.terminate();
 
@@ -21,15 +22,6 @@ pub fn main() !void {
 
         window.swapBuffers();
     }
-}
-
-fn CreateZones(alloc: std.mem.Allocator) ![]tracy.ZoneCtx {
-    var Zones = try alloc.alloc(tracy.ZoneCtx, 100000000);
-    for (0..100000000) |i| {
-        Zones[i] = tracy.Zone(@src());
-        std.debug.print("{}\n", .{i});
-    }
-    return Zones;
 }
 
 test "simple test" {
