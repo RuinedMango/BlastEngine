@@ -1507,7 +1507,7 @@ void Profiler::InstallCrashHandler()
 #if defined _WIN32 && !defined TRACY_UWP && !defined TRACY_NO_CRASH_HANDLER
     // We cannot use Vectored Exception handling because it catches application-wide frame-based SEH blocks. We only
     // want to catch unhandled exceptions.
-    m_prevHandler = AddVectoredExceptionHandler( 1, CrashFilter );
+    //m_prevHandler = SetUnhandledExceptionFilter( CrashFilter );
 #endif
 
 #ifndef TRACY_NO_CRASH_HANDLER
@@ -2862,6 +2862,15 @@ Profiler::DequeueStatus Profiler::DequeueSerial()
                     MemWrite( &item->memFree.time, dt );
                     break;
                 }
+                case QueueType::MemDiscard:
+                case QueueType::MemDiscardCallstack:
+                {
+                    int64_t t = MemRead<int64_t>( &item->memDiscard.time );
+                    int64_t dt = t - refSerial;
+                    refSerial = t;
+                    MemWrite( &item->memDiscard.time, dt );
+                    break;
+                }
                 case QueueType::GpuZoneBeginSerial:
                 case QueueType::GpuZoneBeginCallstackSerial:
                 {
@@ -3104,6 +3113,11 @@ char* Profiler::SafeCopyProlog( const char* data, size_t size )
     char* buf = m_safeSendBuffer;
 #ifndef NDEBUG
     assert( !m_inUse.exchange(true) );
+#endif
+
+    if( size > SafeSendBufferSize ) buf = (char*)tracy_malloc( size );
+
+#ifdef _WIN32
 #else
     // Send through the pipe to ensure safe reads
     for( size_t offset = 0; offset != size; /*in loop*/ )
@@ -4442,6 +4456,8 @@ TRACY_API void ___tracy_emit_memory_alloc( const void* ptr, size_t size, int sec
 TRACY_API void ___tracy_emit_memory_alloc_callstack( const void* ptr, size_t size, int depth, int secure ) { tracy::Profiler::MemAllocCallstack( ptr, size, depth, secure != 0 ); }
 TRACY_API void ___tracy_emit_memory_free( const void* ptr, int secure ) { tracy::Profiler::MemFree( ptr, secure != 0 ); }
 TRACY_API void ___tracy_emit_memory_free_callstack( const void* ptr, int depth, int secure ) { tracy::Profiler::MemFreeCallstack( ptr, depth, secure != 0 ); }
+TRACY_API void ___tracy_emit_memory_discard( const char* name, int secure ) { tracy::Profiler::MemDiscard( name, secure != 0 ); }
+TRACY_API void ___tracy_emit_memory_discard_callstack( const char* name, int secure, int depth ) { tracy::Profiler::MemDiscardCallstack( name, secure != 0, depth ); }
 TRACY_API void ___tracy_emit_memory_alloc_named( const void* ptr, size_t size, int secure, const char* name ) { tracy::Profiler::MemAllocNamed( ptr, size, secure != 0, name ); }
 TRACY_API void ___tracy_emit_memory_alloc_callstack_named( const void* ptr, size_t size, int depth, int secure, const char* name ) { tracy::Profiler::MemAllocCallstackNamed( ptr, size, depth, secure != 0, name ); }
 TRACY_API void ___tracy_emit_memory_free_named( const void* ptr, int secure, const char* name ) { tracy::Profiler::MemFreeNamed( ptr, secure != 0, name ); }

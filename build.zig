@@ -26,6 +26,7 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .enable_blasttracy = true,
         .enable_fibers = true,
+        .on_demand = true,
     });
     exe.root_module.addImport("blasttracy", blasttracy.module("root"));
     exe.linkLibrary(blasttracy.artifact("tracy"));
