@@ -333,5 +333,5 @@ const infotemplate =
 ;
 
 fn printextra(out: std.fs.File, alloc: std.mem.Allocator) !void {
-    _ = try out.write(try std.fmt.allocPrint(alloc, infotemplate, .{ api, version_major, version_minor, profile }));
+    _ = try out.write(try std.fmt.allocPrint(alloc, infotemplate ++ "\n", .{ api, version_major, version_minor, profile }));
 }

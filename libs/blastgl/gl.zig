@@ -3,7 +3,8 @@ pub const info = struct {
   pub const version_major = 4;
   pub const version_minor = 6;
   pub const profile = .core;
-};pub const GL_DEPTH_BUFFER_BIT = 0x00000100;
+};
+pub const GL_DEPTH_BUFFER_BIT = 0x00000100;
 pub const GL_STENCIL_BUFFER_BIT = 0x00000400;
 pub const GL_COLOR_BUFFER_BIT = 0x00004000;
 pub const GL_FALSE = 0;
