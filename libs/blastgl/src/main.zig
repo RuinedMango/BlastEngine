@@ -49,12 +49,12 @@ fn printconstants(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                         if (std.mem.eql(u8, require.getAttribute("profile").?, profile)) {
                             var requiredenums = require.findChildrenByTag("enum");
                             while (requiredenums.next()) |requiredenum| {
-                                const requiredname = requiredenum.getAttribute("name").?;
+                                const requiredname = requiredenum.getAttribute("name").?[3..];
                                 var enumsgroup = root.findChildrenByTag("enums");
                                 while (enumsgroup.next()) |enumgroup| {
                                     var enums = enumgroup.findChildrenByTag("enum");
                                     while (enums.next()) |constanty| {
-                                        if (std.mem.eql(u8, constanty.getAttribute("name").?, requiredname)) {
+                                        if (std.mem.eql(u8, constanty.getAttribute("name").?[3..], requiredname)) {
                                             try list.append(constant{ .name = requiredname, .value = constanty.getAttribute("value").? });
                                         }
                                     }
@@ -64,12 +64,12 @@ fn printconstants(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                     } else {
                         var requiredenums = require.findChildrenByTag("enum");
                         while (requiredenums.next()) |requiredenum| {
-                            const requiredname = requiredenum.getAttribute("name").?;
+                            const requiredname = requiredenum.getAttribute("name").?[3..];
                             var enumsgroup = root.findChildrenByTag("enums");
                             while (enumsgroup.next()) |enumgroup| {
                                 var enums = enumgroup.findChildrenByTag("enum");
                                 while (enums.next()) |constanty| {
-                                    if (std.mem.eql(u8, constanty.getAttribute("name").?, requiredname)) {
+                                    if (std.mem.eql(u8, constanty.getAttribute("name").?[3..], requiredname)) {
                                         try list.append(constant{ .name = requiredname, .value = constanty.getAttribute("value").? });
                                     }
                                 }
@@ -83,12 +83,12 @@ fn printconstants(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                         if (std.mem.eql(u8, remove.getAttribute("profile").?, profile)) {
                             var removedenums = remove.findChildrenByTag("enum");
                             while (removedenums.next()) |removedenum| {
-                                const removedname = removedenum.getAttribute("name").?;
+                                const removedname = removedenum.getAttribute("name").?[3..];
                                 var enumsgroup = root.findChildrenByTag("enums");
                                 while (enumsgroup.next()) |enumgroup| {
                                     var enums = enumgroup.findChildrenByTag("enum");
                                     while (enums.next()) |constanty| {
-                                        if (std.mem.eql(u8, constanty.getAttribute("name").?, removedname)) {
+                                        if (std.mem.eql(u8, constanty.getAttribute("name").?[3..], removedname)) {
                                             for (list.items, 0..) |cons, i| {
                                                 if (std.mem.eql(u8, cons.name, removedname)) {
                                                     if (std.mem.eql(u8, cons.value, constanty.getAttribute("value").?)) {
@@ -104,12 +104,12 @@ fn printconstants(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                     } else {
                         var removedenums = remove.findChildrenByTag("enum");
                         while (removedenums.next()) |removedenum| {
-                            const removedname = removedenum.getAttribute("name").?;
+                            const removedname = removedenum.getAttribute("name").?[3..];
                             var enumsgroup = root.findChildrenByTag("enums");
                             while (enumsgroup.next()) |enumgroup| {
                                 var enums = enumgroup.findChildrenByTag("enum");
                                 while (enums.next()) |constanty| {
-                                    if (std.mem.eql(u8, constanty.getAttribute("name").?, removedname)) {
+                                    if (std.mem.eql(u8, constanty.getAttribute("name").?[3..], removedname)) {
                                         for (list.items, 0..) |cons, i| {
                                             if (std.mem.eql(u8, cons.name, removedname)) {
                                                 if (std.mem.eql(u8, cons.value, constanty.getAttribute("value").?)) {
@@ -126,7 +126,8 @@ fn printconstants(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
             }
         }
     }
-    for (list.items) |item| {
+    const delist = try deduplicateConstants(try list.toOwnedSlice(), alloc);
+    for (delist) |item| {
         _ = try out.write(try std.fmt.allocPrint(alloc, "pub const {s} = {s};\n", .{ item.name, item.value }));
     }
 }
@@ -145,26 +146,26 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                         if (std.mem.eql(u8, require.getAttribute("profile").?, profile)) {
                             var requiredcommands = require.findChildrenByTag("command");
                             while (requiredcommands.next()) |requiredcommand| {
-                                const requiredname = requiredcommand.getAttribute("name").?;
+                                const requiredname = requiredcommand.getAttribute("name").?[2..];
                                 var commandsgroup = root.findChildrenByTag("commands");
                                 while (commandsgroup.next()) |commandgroup| {
                                     var commands = commandgroup.findChildrenByTag("command");
                                     while (commands.next()) |functiony| {
-                                        if (std.mem.eql(u8, functiony.findChildByTag("proto").?.findChildByTag("name").?.children[0].char_data, requiredname)) {
+                                        if (std.mem.eql(u8, functiony.findChildByTag("proto").?.findChildByTag("name").?.children[0].char_data[2..], requiredname)) {
                                             var paramnames = std.ArrayList([]const u8).init(alloc);
                                             var paramtypes = std.ArrayList([]const u8).init(alloc);
                                             var params = functiony.findChildrenByTag("param");
                                             while (params.next()) |param| {
                                                 try paramnames.append(param.findChildByTag("name").?.children[0].char_data);
                                                 if (param.findChildByTag("ptype") != null) {
-                                                    try paramtypes.append(param.findChildByTag("ptype").?.children[0].char_data[2..]);
+                                                    try paramtypes.append(typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]));
                                                 } else {
                                                     try paramtypes.append("?*const anyopaque");
                                                 }
                                             }
                                             var returntype: []const u8 = undefined;
                                             if (functiony.findChildByTag("proto").?.findChildByTag("ptype") != null) {
-                                                returntype = functiony.findChildByTag("proto").?.findChildByTag("ptype").?.children[0].char_data[2..];
+                                                returntype = typeswitch(functiony.findChildByTag("proto").?.findChildByTag("ptype").?.children[0].char_data[2..]);
                                             } else {
                                                 returntype = "void";
                                             }
@@ -177,26 +178,26 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                     } else {
                         var requiredcommands = require.findChildrenByTag("command");
                         while (requiredcommands.next()) |requiredcommand| {
-                            const requiredname = requiredcommand.getAttribute("name").?;
+                            const requiredname = requiredcommand.getAttribute("name").?[2..];
                             var commandsgroup = root.findChildrenByTag("commands");
                             while (commandsgroup.next()) |commandgroup| {
                                 var commands = commandgroup.findChildrenByTag("command");
                                 while (commands.next()) |functiony| {
-                                    if (std.mem.eql(u8, functiony.findChildByTag("proto").?.findChildByTag("name").?.children[0].char_data, requiredname)) {
+                                    if (std.mem.eql(u8, functiony.findChildByTag("proto").?.findChildByTag("name").?.children[0].char_data[2..], requiredname)) {
                                         var paramnames = std.ArrayList([]const u8).init(alloc);
                                         var paramtypes = std.ArrayList([]const u8).init(alloc);
                                         var params = functiony.findChildrenByTag("param");
                                         while (params.next()) |param| {
                                             try paramnames.append(param.findChildByTag("name").?.children[0].char_data);
                                             if (param.findChildByTag("ptype") != null) {
-                                                try paramtypes.append(param.findChildByTag("ptype").?.children[0].char_data[2..]);
+                                                try paramtypes.append(typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]));
                                             } else {
                                                 try paramtypes.append("?*const anyopaque");
                                             }
                                         }
                                         var returntype: []const u8 = undefined;
                                         if (functiony.findChildByTag("proto").?.findChildByTag("ptype") != null) {
-                                            returntype = functiony.findChildByTag("proto").?.findChildByTag("ptype").?.children[0].char_data[2..];
+                                            returntype = typeswitch(functiony.findChildByTag("proto").?.findChildByTag("ptype").?.children[0].char_data[2..]);
                                         } else {
                                             returntype = "void";
                                         }
@@ -213,12 +214,12 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                         if (std.mem.eql(u8, remove.getAttribute("profile").?, profile)) {
                             var removedcommands = remove.findChildrenByTag("command");
                             while (removedcommands.next()) |removedcommand| {
-                                const removedname = removedcommand.getAttribute("name").?;
+                                const removedname = removedcommand.getAttribute("name").?[2..];
                                 var commandsgroup = root.findChildrenByTag("commands");
                                 while (commandsgroup.next()) |commandgroup| {
                                     var commands = commandgroup.findChildrenByTag("command");
                                     while (commands.next()) |functiony| {
-                                        if (std.mem.eql(u8, functiony.findChildByTag("proto").?.findChildByTag("name").?.children[0].char_data, removedname)) {
+                                        if (std.mem.eql(u8, functiony.findChildByTag("proto").?.findChildByTag("name").?.children[0].char_data[2..], removedname)) {
                                             for (list.items, 0..) |funs, i| {
                                                 if (std.mem.eql(u8, funs.name, removedname)) {
                                                     var paramnames = std.ArrayList([]const u8).init(alloc);
@@ -227,7 +228,8 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                                     while (params.next()) |param| {
                                                         try paramnames.append(param.findChildByTag("name").?.children[0].char_data);
                                                         if (param.findChildByTag("ptype") != null) {
-                                                            try paramtypes.append(param.findChildByTag("ptype").?.children[0].char_data[2..]);
+                                                            const gltype = typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]);
+                                                            try paramtypes.append(gltype);
                                                         } else {
                                                             try paramtypes.append("?*const anyopaque");
                                                         }
@@ -257,42 +259,45 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                             }
                         }
                     } else {
-                        var removedenums = remove.findChildrenByTag("enum");
-                        while (removedenums.next()) |removedenum| {
-                            const removedname = removedenum.getAttribute("name").?;
-                            var enumsgroup = root.findChildrenByTag("enums");
-                            while (enumsgroup.next()) |enumgroup| {
-                                var enums = enumgroup.findChildrenByTag("enum");
-                                while (enums.next()) |functiony| {
-                                    if (std.mem.eql(u8, functiony.getAttribute("name").?, removedname)) {
-                                        for (list.items, 0..) |cons, i| {
-                                            if (std.mem.eql(u8, cons.name, removedname)) {
+                        var removedcommands = remove.findChildrenByTag("command");
+                        while (removedcommands.next()) |removedcommand| {
+                            const removedname = removedcommand.getAttribute("name").?[2..];
+                            var commandsgroup = root.findChildrenByTag("commands");
+                            while (commandsgroup.next()) |commandgroup| {
+                                var commands = commandgroup.findChildrenByTag("command");
+                                while (commands.next()) |functiony| {
+                                    if (std.mem.eql(u8, functiony.findChildByTag("proto").?.findChildByTag("name").?.children[0].char_data[2..], removedname)) {
+                                        for (list.items, 0..) |funs, i| {
+                                            if (std.mem.eql(u8, funs.name, removedname)) {
                                                 var paramnames = std.ArrayList([]const u8).init(alloc);
                                                 var paramtypes = std.ArrayList([]const u8).init(alloc);
                                                 var params = functiony.findChildrenByTag("param");
                                                 while (params.next()) |param| {
                                                     try paramnames.append(param.findChildByTag("name").?.children[0].char_data);
                                                     if (param.findChildByTag("ptype") != null) {
-                                                        try paramtypes.append(param.findChildByTag("ptype").?.children[0].char_data[2..]);
+                                                        const gltype = typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]);
+                                                        std.debug.print("{s}", .{param.children[0].char_data});
+                                                        if (std.mem.eql(u8, param.children[0].char_data, "*")) {}
+                                                        try paramtypes.append(gltype);
                                                     } else {
                                                         try paramtypes.append("?*const anyopaque");
                                                     }
                                                 }
-                                                if (paramtypes.items.len == 0) {
+                                                if (funs.paramtypes.len == 0) {
                                                     _ = list.swapRemove(i);
-                                                }
-                                                var paramnamessame = true;
-                                                for (try paramnames.toOwnedSlice(), 0..) |paramname, l| {
-                                                    paramnamessame = std.mem.eql(u8, paramname, cons.paramnames[l]);
-                                                }
-                                                if (paramnamessame) {
-                                                    var paramtypessame = true;
-                                                    for (try paramtypes.toOwnedSlice(), 0..) |paramtype, x| {
-                                                        std.debug.print("{s}:", .{paramtype});
-                                                        paramtypessame = std.mem.eql(u8, paramtype, cons.paramtypes[x]);
+                                                } else {
+                                                    var paramnamessame = true;
+                                                    for (try paramnames.toOwnedSlice(), 0..) |paramname, l| {
+                                                        paramnamessame = std.mem.eql(u8, paramname, funs.paramnames[l]);
                                                     }
-                                                    if (paramtypessame) {
-                                                        _ = list.swapRemove(i);
+                                                    if (paramnamessame) {
+                                                        var paramtypessame = true;
+                                                        for (try paramtypes.toOwnedSlice(), 0..) |paramtype, j| {
+                                                            paramtypessame = std.mem.eql(u8, paramtype, funs.paramtypes[j]);
+                                                        }
+                                                        if (paramtypessame) {
+                                                            _ = list.swapRemove(i);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -306,21 +311,58 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
             }
         }
     }
-    for (list.items) |item| {
-        _ = try out.write(try std.fmt.allocPrint(alloc, "pub const {s}(", .{item.name}));
+    const delist = try deduplicateFunctions(try list.toOwnedSlice(), alloc);
+    for (delist) |item| {
+        _ = try out.write(try std.fmt.allocPrint(alloc, "pub fn {s}(", .{item.name}));
         if (item.paramnames.len != 0) {
             if (item.paramtypes.len != 0) {
                 for (item.paramnames, 0..) |paramname, i| {
                     _ = try out.write(try std.fmt.allocPrint(alloc, "{s}: {s}", .{ paramname, item.paramtypes[i] }));
                     if (i + 2 > item.paramtypes.len) {
-                        _ = try out.write(try std.fmt.allocPrint(alloc, ") {s}{{\n", .{item.returntype}));
+                        _ = try out.write(try std.fmt.allocPrint(alloc, ") {s} {{\n", .{item.returntype}));
                     } else {
                         _ = try out.write(", ");
                     }
                 }
             }
+        } else {
+            _ = try out.write(try std.fmt.allocPrint(alloc, ") {s} {{\n", .{item.returntype}));
+        }
+        _ = try out.write(try std.fmt.allocPrint(alloc, "   return FuncTable.current.?.{s}(", .{item.name}));
+        if (item.paramnames.len != 0) {
+            if (item.paramtypes.len != 0) {
+                for (item.paramnames, 0..) |paramname, i| {
+                    _ = try out.write(try std.fmt.allocPrint(alloc, "{s}", .{paramname}));
+                    if (i + 2 > item.paramtypes.len) {
+                        _ = try out.write(try std.fmt.allocPrint(alloc, ");\n}}\n", .{}));
+                    } else {
+                        _ = try out.write(", ");
+                    }
+                }
+            }
+        } else {
+            _ = try out.write(try std.fmt.allocPrint(alloc, ");\n}}\n", .{}));
         }
     }
+    _ = try out.write("pub const FuncTable = struct {\n   threadlocal var current: ?*const FuncTable = null;\n");
+    for (delist) |item| {
+        _ = try out.write(try std.fmt.allocPrint(alloc, "   {s}: *const fn (", .{item.name}));
+        if (item.paramnames.len != 0) {
+            if (item.paramtypes.len != 0) {
+                for (item.paramnames, 0..) |paramname, i| {
+                    _ = try out.write(try std.fmt.allocPrint(alloc, "{s}: {s}", .{ paramname, item.paramtypes[i] }));
+                    if (i + 2 > item.paramtypes.len) {
+                        _ = try out.write(try std.fmt.allocPrint(alloc, ") callconv(APIENTRY) {s},\n", .{item.returntype}));
+                    } else {
+                        _ = try out.write(", ");
+                    }
+                }
+            }
+        } else {
+            _ = try out.write(try std.fmt.allocPrint(alloc, ") callconv(APIENTRY) {s},\n", .{item.returntype}));
+        }
+    }
+    _ = try out.write(funcTableFunctions ++ "\n};");
 }
 
 const infotemplate =
@@ -333,5 +375,134 @@ const infotemplate =
 ;
 
 fn printextra(out: std.fs.File, alloc: std.mem.Allocator) !void {
-    _ = try out.write(try std.fmt.allocPrint(alloc, infotemplate ++ "\n", .{ api, version_major, version_minor, profile }));
+    _ = try out.write("const std = @import(\"std\");\nconst builtin = @import(\"builtin\");\n\n");
+    _ = try out.write(try std.fmt.allocPrint(alloc, infotemplate ++ "\n\n", .{ api, version_major, version_minor, profile }));
+    _ = try out.write("pub fn makeFuncTableCurrent(procs: ?*const FuncTable) void {{\n  FuncTable.current = procs;\n}}\n\n");
+    _ = try out.write("pub fn getCurrentFuncTable() ?*const FuncTable{{\n   return FuncTable.current;\n}}\n\n");
+    _ = try out.write(glTypes ++ "\n\n");
 }
+
+fn typeswitch(intype: []const u8) []const u8 {
+    if (std.mem.eql(u8, "DEBUGPROC", intype)) {
+        return "?DEBUGPROC";
+    } else if (std.mem.eql(u8, "enum", intype)) {
+        return "@\"enum\"";
+    }
+    return intype;
+}
+
+fn deduplicateConstants(array: []constant, alloc: std.mem.Allocator) ![]constant {
+    var allKeys = std.StringHashMap(bool).init(alloc);
+    defer allKeys.deinit();
+    var list = std.ArrayList(constant).init(alloc);
+    for (array) |item| {
+        if (allKeys.get(item.name) != null) {
+            if (allKeys.get(item.name).? == false) {
+                try allKeys.put(item.name, true);
+                try list.append(item);
+            }
+        } else {
+            try allKeys.put(item.name, false);
+        }
+    }
+    for (array) |item| {
+        if (allKeys.get(item.name) != null) {
+            if (allKeys.get(item.name).? == false) {
+                try allKeys.put(item.name, true);
+                try list.append(item);
+            }
+        }
+    }
+    return try list.toOwnedSlice();
+}
+
+fn deduplicateFunctions(array: []function, alloc: std.mem.Allocator) ![]function {
+    var allKeys = std.StringHashMap(bool).init(alloc);
+    defer allKeys.deinit();
+    var list = std.ArrayList(function).init(alloc);
+    for (array) |item| {
+        if (allKeys.get(item.name) != null) {
+            if (allKeys.get(item.name).? == false) {
+                try allKeys.put(item.name, true);
+                try list.append(item);
+            }
+        } else {
+            try allKeys.put(item.name, false);
+        }
+    }
+    for (array) |item| {
+        if (allKeys.get(item.name) != null) {
+            if (allKeys.get(item.name).? == false) {
+                try allKeys.put(item.name, true);
+                try list.append(item);
+            }
+        }
+    }
+    return try list.toOwnedSlice();
+}
+const funcTableFunctions =
+    \\   pub fn init(procs: *FuncTable, loader: anytype) bool {
+    \\      @setEvalBranchQuota(1_000_000);
+    \\      var success: u1 = 1;
+    \\      inline for (@typeInfo(FuncTable).Struct.fields) |field_info| {
+    \\          switch (@typeInfo(field_info.type)) {
+    \\              .Pointer => |ptr_info| switch (@typeInfo(ptr_info.child)) {
+    \\                  .Fn => {
+    \\                      success &= @intFromBool(procs.initCommand(loader, field_info.name));
+    \\                  },
+    \\                  else => comptime unreachable,
+    \\              },
+    \\              else => comptime unreachable,
+    \\          }
+    \\      }
+    \\      return success != 0;
+    \\   }
+    \\
+    \\   fn initCommand(procs: *FuncTable, loader: anytype, comptime name: [:0]const u8) bool {
+    \\      if (getProcAddress(loader, "gl" ++ name)) |proc| {
+    \\          @field(procs, name) = @ptrCast(proc);
+    \\          return true;
+    \\      } else {
+    \\          return @typeInfo(@TypeOf(@field(procs, name))) == .Optional;
+    \\      }
+    \\   }
+    \\
+    \\   fn getProcAddress(loader: anytype, prefixed_name: [:0]const u8) ?PROC {
+    \\      const loader_info = @typeInfo(@TypeOf(loader));
+    \\      const loader_is_fn =
+    \\          loader_info == .Fn or
+    \\          loader_info == .Pointer and @typeInfo(loader_info.Pointer.child) == .Fn;
+    \\      if (loader_is_fn) {
+    \\          return @as(?PROC, loader(@as([*:0]const u8, prefixed_name)));
+    \\      } else {
+    \\          return @as(?PROC, loader.getProcAddress(@as([*:0]const u8, prefixed_name)));
+    \\      }
+    \\   }
+;
+const glTypes =
+    \\pub const APIENTRY: std.builtin.CallingConvention = if (builtin.os.tag == .windows and builtin.cpu.arch == .x86) .Stdcall else .C;
+    \\pub const PROC = *align(@alignOf(fn () callconv(APIENTRY) void)) const anyopaque;
+    \\
+    \\pub const DEBUGPROC = *const fn (source: @"enum", @"type": @"enum", id: uint, severity: @"enum", length: sizei, message: [*:0]const char, userParam: ?*const anyopaque) callconv(APIENTRY) void;
+    \\pub const bitfield = c_uint;
+    \\pub const boolean = u8;
+    \\pub const byte = i8;
+    \\pub const char = u8;
+    \\pub const clampd = f64;
+    \\pub const clampf = f32;
+    \\pub const double = f64;
+    \\pub const @"enum" = c_uint;
+    \\pub const float = f32;
+    \\pub const half = u16;
+    \\pub const int = c_int;
+    \\pub const int64 = i64;
+    \\pub const intptr = isize;
+    \\pub const short = i16;
+    \\pub const sizei = c_int;
+    \\pub const sizeiptr = isize;
+    \\pub const sync = *opaque {};
+    \\pub const ubyte = u8;
+    \\pub const uint = c_uint;
+    \\pub const uint64 = u64;
+    \\pub const ushort = u16;
+;
