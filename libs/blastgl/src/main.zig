@@ -156,7 +156,12 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                             var paramtypes = std.ArrayList([]const u8).init(alloc);
                                             var params = functiony.findChildrenByTag("param");
                                             while (params.next()) |param| {
-                                                try paramnames.append(param.findChildByTag("name").?.children[0].char_data);
+                                                var name = param.findChildByTag("name").?.children[0].char_data;
+                                                if (std.mem.eql(u8, name, "type")) {
+                                                    name = "@\"type\"";
+                                                } else if (std.mem.eql(u8, name, "sync")) {
+                                                    name = "_sync";
+                                                }
                                                 if (param.findChildByTag("ptype") != null) {
                                                     try paramtypes.append(typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]));
                                                 } else {
@@ -188,7 +193,13 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                         var paramtypes = std.ArrayList([]const u8).init(alloc);
                                         var params = functiony.findChildrenByTag("param");
                                         while (params.next()) |param| {
-                                            try paramnames.append(param.findChildByTag("name").?.children[0].char_data);
+                                            var name = param.findChildByTag("name").?.children[0].char_data;
+                                            if (std.mem.eql(u8, name, "type")) {
+                                                name = "@\"type\"";
+                                            } else if (std.mem.eql(u8, name, "sync")) {
+                                                name = "_sync";
+                                            }
+                                            try paramnames.append(name);
                                             if (param.findChildByTag("ptype") != null) {
                                                 try paramtypes.append(typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]));
                                             } else {
@@ -226,7 +237,13 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                                     var paramtypes = std.ArrayList([]const u8).init(alloc);
                                                     var params = functiony.findChildrenByTag("param");
                                                     while (params.next()) |param| {
-                                                        try paramnames.append(param.findChildByTag("name").?.children[0].char_data);
+                                                        var name = param.findChildByTag("name").?.children[0].char_data;
+                                                        if (std.mem.eql(u8, name, "type")) {
+                                                            name = "@\"type\"";
+                                                        } else if (std.mem.eql(u8, name, "sync")) {
+                                                            name = "_sync";
+                                                        }
+                                                        try paramnames.append(name);
                                                         if (param.findChildByTag("ptype") != null) {
                                                             const gltype = typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]);
                                                             try paramtypes.append(gltype);
@@ -273,7 +290,12 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                                 var paramtypes = std.ArrayList([]const u8).init(alloc);
                                                 var params = functiony.findChildrenByTag("param");
                                                 while (params.next()) |param| {
-                                                    try paramnames.append(param.findChildByTag("name").?.children[0].char_data);
+                                                    var name = param.findChildByTag("name").?.children[0].char_data;
+                                                    if (std.mem.eql(u8, name, "type")) {
+                                                        name = "@\"type\"";
+                                                    } else if (std.mem.eql(u8, name, "sync")) {
+                                                        name = "_sync";
+                                                    }
                                                     if (param.findChildByTag("ptype") != null) {
                                                         const gltype = typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]);
                                                         std.debug.print("{s}", .{param.children[0].char_data});

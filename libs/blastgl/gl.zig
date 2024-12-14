@@ -1454,11 +1454,11 @@ pub fn TexParameteri(target: @"enum", pname: @"enum", param: int) void {
 pub fn TexParameteriv(target: @"enum", pname: @"enum", params: int) void {
    return FuncTable.current.?.TexParameteriv(target, pname, params);
 }
-pub fn TexImage1D(target: @"enum", level: int, internalformat: int, width: sizei, border: int, format: @"enum", type: @"enum", pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.TexImage1D(target, level, internalformat, width, border, format, type, pixels);
+pub fn TexImage1D(target: @"enum", level: int, internalformat: int, width: sizei, border: int, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.TexImage1D(target, level, internalformat, width, border, format, @"type", pixels);
 }
-pub fn TexImage2D(target: @"enum", level: int, internalformat: int, width: sizei, height: sizei, border: int, format: @"enum", type: @"enum", pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.TexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
+pub fn TexImage2D(target: @"enum", level: int, internalformat: int, width: sizei, height: sizei, border: int, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.TexImage2D(target, level, internalformat, width, height, border, format, @"type", pixels);
 }
 pub fn DrawBuffer(buf: @"enum") void {
    return FuncTable.current.?.DrawBuffer(buf);
@@ -1520,8 +1520,8 @@ pub fn PixelStorei(pname: @"enum", param: int) void {
 pub fn ReadBuffer(src: @"enum") void {
    return FuncTable.current.?.ReadBuffer(src);
 }
-pub fn ReadPixels(x: int, y: int, width: sizei, height: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.ReadPixels(x, y, width, height, format, type, pixels);
+pub fn ReadPixels(x: int, y: int, width: sizei, height: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.ReadPixels(x, y, width, height, format, @"type", pixels);
 }
 pub fn GetBooleanv(pname: @"enum", data: boolean) void {
    return FuncTable.current.?.GetBooleanv(pname, data);
@@ -1541,8 +1541,8 @@ pub fn GetIntegerv(pname: @"enum", data: int) void {
 pub fn GetString(name: @"enum") ubyte {
    return FuncTable.current.?.GetString(name);
 }
-pub fn GetTexImage(target: @"enum", level: int, format: @"enum", type: @"enum", pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.GetTexImage(target, level, format, type, pixels);
+pub fn GetTexImage(target: @"enum", level: int, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.GetTexImage(target, level, format, @"type", pixels);
 }
 pub fn GetTexParameterfv(target: @"enum", pname: @"enum", params: float) void {
    return FuncTable.current.?.GetTexParameterfv(target, pname, params);
@@ -1586,23 +1586,23 @@ pub fn GetBufferParameteri64v(target: @"enum", pname: @"enum", params: int64) vo
 pub fn GetInteger64i_v(target: @"enum", index: uint, data: int64) void {
    return FuncTable.current.?.GetInteger64i_v(target, index, data);
 }
-pub fn GetSynciv(sync: sync, pname: @"enum", count: sizei, length: sizei, values: int) void {
-   return FuncTable.current.?.GetSynciv(sync, pname, count, length, values);
+pub fn GetSynciv(_sync: sync, pname: @"enum", count: sizei, length: sizei, values: int) void {
+   return FuncTable.current.?.GetSynciv(_sync, pname, count, length, values);
 }
 pub fn GetInteger64v(pname: @"enum", data: int64) void {
    return FuncTable.current.?.GetInteger64v(pname, data);
 }
-pub fn WaitSync(sync: sync, flags: bitfield, timeout: uint64) void {
-   return FuncTable.current.?.WaitSync(sync, flags, timeout);
+pub fn WaitSync(_sync: sync, flags: bitfield, timeout: uint64) void {
+   return FuncTable.current.?.WaitSync(_sync, flags, timeout);
 }
-pub fn ClientWaitSync(sync: sync, flags: bitfield, timeout: uint64) @"enum" {
-   return FuncTable.current.?.ClientWaitSync(sync, flags, timeout);
+pub fn ClientWaitSync(_sync: sync, flags: bitfield, timeout: uint64) @"enum" {
+   return FuncTable.current.?.ClientWaitSync(_sync, flags, timeout);
 }
-pub fn DeleteSync(sync: sync) void {
-   return FuncTable.current.?.DeleteSync(sync);
+pub fn DeleteSync(_sync: sync) void {
+   return FuncTable.current.?.DeleteSync(_sync);
 }
-pub fn IsSync(sync: sync) boolean {
-   return FuncTable.current.?.IsSync(sync);
+pub fn IsSync(_sync: sync) boolean {
+   return FuncTable.current.?.IsSync(_sync);
 }
 pub fn FenceSync(condition: @"enum", flags: bitfield) sync {
    return FuncTable.current.?.FenceSync(condition, flags);
@@ -1610,17 +1610,17 @@ pub fn FenceSync(condition: @"enum", flags: bitfield) sync {
 pub fn ProvokingVertex(mode: @"enum") void {
    return FuncTable.current.?.ProvokingVertex(mode);
 }
-pub fn MultiDrawElementsBaseVertex(mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, drawcount: sizei, basevertex: int) void {
-   return FuncTable.current.?.MultiDrawElementsBaseVertex(mode, count, type, indices, drawcount, basevertex);
+pub fn MultiDrawElementsBaseVertex(mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, drawcount: sizei, basevertex: int) void {
+   return FuncTable.current.?.MultiDrawElementsBaseVertex(mode, count, @"type", indices, drawcount, basevertex);
 }
-pub fn DrawElementsInstancedBaseVertex(mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, instancecount: sizei, basevertex: int) void {
-   return FuncTable.current.?.DrawElementsInstancedBaseVertex(mode, count, type, indices, instancecount, basevertex);
+pub fn DrawElementsInstancedBaseVertex(mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, instancecount: sizei, basevertex: int) void {
+   return FuncTable.current.?.DrawElementsInstancedBaseVertex(mode, count, @"type", indices, instancecount, basevertex);
 }
-pub fn DrawRangeElementsBaseVertex(mode: @"enum", start: uint, end: uint, count: sizei, type: @"enum", indices: ?*const anyopaque, basevertex: int) void {
-   return FuncTable.current.?.DrawRangeElementsBaseVertex(mode, start, end, count, type, indices, basevertex);
+pub fn DrawRangeElementsBaseVertex(mode: @"enum", start: uint, end: uint, count: sizei, @"type": @"enum", indices: ?*const anyopaque, basevertex: int) void {
+   return FuncTable.current.?.DrawRangeElementsBaseVertex(mode, start, end, count, @"type", indices, basevertex);
 }
-pub fn DrawElementsBaseVertex(mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, basevertex: int) void {
-   return FuncTable.current.?.DrawElementsBaseVertex(mode, count, type, indices, basevertex);
+pub fn DrawElementsBaseVertex(mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, basevertex: int) void {
+   return FuncTable.current.?.DrawElementsBaseVertex(mode, count, @"type", indices, basevertex);
 }
 pub fn UniformBlockBinding(program: uint, uniformBlockIndex: uint, uniformBlockBinding: uint) void {
    return FuncTable.current.?.UniformBlockBinding(program, uniformBlockIndex, uniformBlockBinding);
@@ -1652,8 +1652,8 @@ pub fn PrimitiveRestartIndex(index: uint) void {
 pub fn TexBuffer(target: @"enum", internalformat: @"enum", buffer: uint) void {
    return FuncTable.current.?.TexBuffer(target, internalformat, buffer);
 }
-pub fn DrawElementsInstanced(mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, instancecount: sizei) void {
-   return FuncTable.current.?.DrawElementsInstanced(mode, count, type, indices, instancecount);
+pub fn DrawElementsInstanced(mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, instancecount: sizei) void {
+   return FuncTable.current.?.DrawElementsInstanced(mode, count, @"type", indices, instancecount);
 }
 pub fn DrawArraysInstanced(mode: @"enum", first: int, count: sizei, instancecount: sizei) void {
    return FuncTable.current.?.DrawArraysInstanced(mode, first, count, instancecount);
@@ -1862,8 +1862,8 @@ pub fn GetVertexAttribIuiv(index: uint, pname: @"enum", params: uint) void {
 pub fn GetVertexAttribIiv(index: uint, pname: @"enum", params: int) void {
    return FuncTable.current.?.GetVertexAttribIiv(index, pname, params);
 }
-pub fn VertexAttribIPointer(index: uint, size: int, type: @"enum", stride: sizei, pointer: ?*const anyopaque) void {
-   return FuncTable.current.?.VertexAttribIPointer(index, size, type, stride, pointer);
+pub fn VertexAttribIPointer(index: uint, size: int, @"type": @"enum", stride: sizei, pointer: ?*const anyopaque) void {
+   return FuncTable.current.?.VertexAttribIPointer(index, size, @"type", stride, pointer);
 }
 pub fn EndConditionalRender() void {
    return FuncTable.current.?.EndConditionalRender();
@@ -1874,8 +1874,8 @@ pub fn BeginConditionalRender(id: uint, mode: @"enum") void {
 pub fn ClampColor(target: @"enum", clamp: @"enum") void {
    return FuncTable.current.?.ClampColor(target, clamp);
 }
-pub fn GetTransformFeedbackVarying(program: uint, index: uint, bufSize: sizei, length: sizei, size: sizei, type: @"enum", name: char) void {
-   return FuncTable.current.?.GetTransformFeedbackVarying(program, index, bufSize, length, size, type, name);
+pub fn GetTransformFeedbackVarying(program: uint, index: uint, bufSize: sizei, length: sizei, size: sizei, @"type": @"enum", name: char) void {
+   return FuncTable.current.?.GetTransformFeedbackVarying(program, index, bufSize, length, size, @"type", name);
 }
 pub fn TransformFeedbackVaryings(program: uint, count: sizei, varyings: char, bufferMode: @"enum") void {
    return FuncTable.current.?.TransformFeedbackVaryings(program, count, varyings, bufferMode);
@@ -1919,8 +1919,8 @@ pub fn UniformMatrix3x2fv(location: int, count: sizei, transpose: boolean, value
 pub fn UniformMatrix2x3fv(location: int, count: sizei, transpose: boolean, value: float) void {
    return FuncTable.current.?.UniformMatrix2x3fv(location, count, transpose, value);
 }
-pub fn VertexAttribPointer(index: uint, size: int, type: @"enum", normalized: boolean, stride: sizei, pointer: ?*const anyopaque) void {
-   return FuncTable.current.?.VertexAttribPointer(index, size, type, normalized, stride, pointer);
+pub fn VertexAttribPointer(index: uint, size: int, @"type": @"enum", normalized: boolean, stride: sizei, pointer: ?*const anyopaque) void {
+   return FuncTable.current.?.VertexAttribPointer(index, size, @"type", normalized, stride, pointer);
 }
 pub fn VertexAttrib4usv(index: uint, v: ushort) void {
    return FuncTable.current.?.VertexAttrib4usv(index, v);
@@ -2147,11 +2147,11 @@ pub fn GetAttribLocation(program: uint, name: char) int {
 pub fn GetAttachedShaders(program: uint, maxCount: sizei, count: sizei, shaders: uint) void {
    return FuncTable.current.?.GetAttachedShaders(program, maxCount, count, shaders);
 }
-pub fn GetActiveUniform(program: uint, index: uint, bufSize: sizei, length: sizei, size: int, type: @"enum", name: char) void {
-   return FuncTable.current.?.GetActiveUniform(program, index, bufSize, length, size, type, name);
+pub fn GetActiveUniform(program: uint, index: uint, bufSize: sizei, length: sizei, size: int, @"type": @"enum", name: char) void {
+   return FuncTable.current.?.GetActiveUniform(program, index, bufSize, length, size, @"type", name);
 }
-pub fn GetActiveAttrib(program: uint, index: uint, bufSize: sizei, length: sizei, size: int, type: @"enum", name: char) void {
-   return FuncTable.current.?.GetActiveAttrib(program, index, bufSize, length, size, type, name);
+pub fn GetActiveAttrib(program: uint, index: uint, bufSize: sizei, length: sizei, size: int, @"type": @"enum", name: char) void {
+   return FuncTable.current.?.GetActiveAttrib(program, index, bufSize, length, size, @"type", name);
 }
 pub fn EnableVertexAttribArray(index: uint) void {
    return FuncTable.current.?.EnableVertexAttribArray(index);
@@ -2168,8 +2168,8 @@ pub fn DeleteShader(shader: uint) void {
 pub fn DeleteProgram(program: uint) void {
    return FuncTable.current.?.DeleteProgram(program);
 }
-pub fn CreateShader(type: @"enum") uint {
-   return FuncTable.current.?.CreateShader(type);
+pub fn CreateShader(@"type": @"enum") uint {
+   return FuncTable.current.?.CreateShader(@"type");
 }
 pub fn CreateProgram() uint {
    return FuncTable.current.?.CreateProgram();
@@ -2306,26 +2306,26 @@ pub fn PointParameterfv(pname: @"enum", params: float) void {
 pub fn PointParameterf(pname: @"enum", param: float) void {
    return FuncTable.current.?.PointParameterf(pname, param);
 }
-pub fn MultiDrawElements(mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, drawcount: sizei) void {
-   return FuncTable.current.?.MultiDrawElements(mode, count, type, indices, drawcount);
+pub fn MultiDrawElements(mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, drawcount: sizei) void {
+   return FuncTable.current.?.MultiDrawElements(mode, count, @"type", indices, drawcount);
 }
 pub fn MultiDrawArrays(mode: @"enum", first: int, count: sizei, drawcount: sizei) void {
    return FuncTable.current.?.MultiDrawArrays(mode, first, count, drawcount);
 }
-pub fn DrawRangeElements(mode: @"enum", start: uint, end: uint, count: sizei, type: @"enum", indices: ?*const anyopaque) void {
-   return FuncTable.current.?.DrawRangeElements(mode, start, end, count, type, indices);
+pub fn DrawRangeElements(mode: @"enum", start: uint, end: uint, count: sizei, @"type": @"enum", indices: ?*const anyopaque) void {
+   return FuncTable.current.?.DrawRangeElements(mode, start, end, count, @"type", indices);
 }
-pub fn TexImage3D(target: @"enum", level: int, internalformat: int, width: sizei, height: sizei, depth: sizei, border: int, format: @"enum", type: @"enum", pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.TexImage3D(target, level, internalformat, width, height, depth, border, format, type, pixels);
+pub fn TexImage3D(target: @"enum", level: int, internalformat: int, width: sizei, height: sizei, depth: sizei, border: int, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.TexImage3D(target, level, internalformat, width, height, depth, border, format, @"type", pixels);
 }
-pub fn TexSubImage3D(target: @"enum", level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.TexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+pub fn TexSubImage3D(target: @"enum", level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.TexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, @"type", pixels);
 }
 pub fn DrawArrays(mode: @"enum", first: int, count: sizei) void {
    return FuncTable.current.?.DrawArrays(mode, first, count);
 }
-pub fn DrawElements(mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque) void {
-   return FuncTable.current.?.DrawElements(mode, count, type, indices);
+pub fn DrawElements(mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque) void {
+   return FuncTable.current.?.DrawElements(mode, count, @"type", indices);
 }
 pub fn CompressedTexSubImage3D(target: @"enum", level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", imageSize: sizei, data: ?*const anyopaque) void {
    return FuncTable.current.?.CompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
@@ -2345,11 +2345,11 @@ pub fn CopyTexSubImage1D(target: @"enum", level: int, xoffset: int, x: int, y: i
 pub fn CopyTexSubImage2D(target: @"enum", level: int, xoffset: int, yoffset: int, x: int, y: int, width: sizei, height: sizei) void {
    return FuncTable.current.?.CopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
 }
-pub fn TexSubImage1D(target: @"enum", level: int, xoffset: int, width: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.TexSubImage1D(target, level, xoffset, width, format, type, pixels);
+pub fn TexSubImage1D(target: @"enum", level: int, xoffset: int, width: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.TexSubImage1D(target, level, xoffset, width, format, @"type", pixels);
 }
-pub fn TexSubImage2D(target: @"enum", level: int, xoffset: int, yoffset: int, width: sizei, height: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.TexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
+pub fn TexSubImage2D(target: @"enum", level: int, xoffset: int, yoffset: int, width: sizei, height: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.TexSubImage2D(target, level, xoffset, yoffset, width, height, format, @"type", pixels);
 }
 pub fn BindTexture(target: @"enum", texture: uint) void {
    return FuncTable.current.?.BindTexture(target, texture);
@@ -2420,29 +2420,29 @@ pub fn GetQueryObjectui64v(id: uint, pname: @"enum", params: uint64) void {
 pub fn VertexAttribDivisor(index: uint, divisor: uint) void {
    return FuncTable.current.?.VertexAttribDivisor(index, divisor);
 }
-pub fn VertexAttribP1ui(index: uint, type: @"enum", normalized: boolean, value: uint) void {
-   return FuncTable.current.?.VertexAttribP1ui(index, type, normalized, value);
+pub fn VertexAttribP1ui(index: uint, @"type": @"enum", normalized: boolean, value: uint) void {
+   return FuncTable.current.?.VertexAttribP1ui(index, @"type", normalized, value);
 }
-pub fn VertexAttribP1uiv(index: uint, type: @"enum", normalized: boolean, value: uint) void {
-   return FuncTable.current.?.VertexAttribP1uiv(index, type, normalized, value);
+pub fn VertexAttribP1uiv(index: uint, @"type": @"enum", normalized: boolean, value: uint) void {
+   return FuncTable.current.?.VertexAttribP1uiv(index, @"type", normalized, value);
 }
-pub fn VertexAttribP2ui(index: uint, type: @"enum", normalized: boolean, value: uint) void {
-   return FuncTable.current.?.VertexAttribP2ui(index, type, normalized, value);
+pub fn VertexAttribP2ui(index: uint, @"type": @"enum", normalized: boolean, value: uint) void {
+   return FuncTable.current.?.VertexAttribP2ui(index, @"type", normalized, value);
 }
-pub fn VertexAttribP2uiv(index: uint, type: @"enum", normalized: boolean, value: uint) void {
-   return FuncTable.current.?.VertexAttribP2uiv(index, type, normalized, value);
+pub fn VertexAttribP2uiv(index: uint, @"type": @"enum", normalized: boolean, value: uint) void {
+   return FuncTable.current.?.VertexAttribP2uiv(index, @"type", normalized, value);
 }
-pub fn VertexAttribP3ui(index: uint, type: @"enum", normalized: boolean, value: uint) void {
-   return FuncTable.current.?.VertexAttribP3ui(index, type, normalized, value);
+pub fn VertexAttribP3ui(index: uint, @"type": @"enum", normalized: boolean, value: uint) void {
+   return FuncTable.current.?.VertexAttribP3ui(index, @"type", normalized, value);
 }
-pub fn VertexAttribP3uiv(index: uint, type: @"enum", normalized: boolean, value: uint) void {
-   return FuncTable.current.?.VertexAttribP3uiv(index, type, normalized, value);
+pub fn VertexAttribP3uiv(index: uint, @"type": @"enum", normalized: boolean, value: uint) void {
+   return FuncTable.current.?.VertexAttribP3uiv(index, @"type", normalized, value);
 }
-pub fn VertexAttribP4ui(index: uint, type: @"enum", normalized: boolean, value: uint) void {
-   return FuncTable.current.?.VertexAttribP4ui(index, type, normalized, value);
+pub fn VertexAttribP4ui(index: uint, @"type": @"enum", normalized: boolean, value: uint) void {
+   return FuncTable.current.?.VertexAttribP4ui(index, @"type", normalized, value);
 }
-pub fn VertexAttribP4uiv(index: uint, type: @"enum", normalized: boolean, value: uint) void {
-   return FuncTable.current.?.VertexAttribP4uiv(index, type, normalized, value);
+pub fn VertexAttribP4uiv(index: uint, @"type": @"enum", normalized: boolean, value: uint) void {
+   return FuncTable.current.?.VertexAttribP4uiv(index, @"type", normalized, value);
 }
 pub fn MinSampleShading(value: float) void {
    return FuncTable.current.?.MinSampleShading(value);
@@ -2462,8 +2462,8 @@ pub fn BlendFuncSeparatei(buf: uint, srcRGB: @"enum", dstRGB: @"enum", srcAlpha:
 pub fn DrawArraysIndirect(mode: @"enum", indirect: ?*const anyopaque) void {
    return FuncTable.current.?.DrawArraysIndirect(mode, indirect);
 }
-pub fn DrawElementsIndirect(mode: @"enum", type: @"enum", indirect: ?*const anyopaque) void {
-   return FuncTable.current.?.DrawElementsIndirect(mode, type, indirect);
+pub fn DrawElementsIndirect(mode: @"enum", @"type": @"enum", indirect: ?*const anyopaque) void {
+   return FuncTable.current.?.DrawElementsIndirect(mode, @"type", indirect);
 }
 pub fn Uniform1d(location: int, x: double) void {
    return FuncTable.current.?.Uniform1d(location, x);
@@ -2609,8 +2609,8 @@ pub fn UseProgramStages(pipeline: uint, stages: bitfield, program: uint) void {
 pub fn ActiveShaderProgram(pipeline: uint, program: uint) void {
    return FuncTable.current.?.ActiveShaderProgram(pipeline, program);
 }
-pub fn CreateShaderProgramv(type: @"enum", count: sizei, strings: char) uint {
-   return FuncTable.current.?.CreateShaderProgramv(type, count, strings);
+pub fn CreateShaderProgramv(@"type": @"enum", count: sizei, strings: char) uint {
+   return FuncTable.current.?.CreateShaderProgramv(@"type", count, strings);
 }
 pub fn BindProgramPipeline(pipeline: uint) void {
    return FuncTable.current.?.BindProgramPipeline(pipeline);
@@ -2807,8 +2807,8 @@ pub fn VertexAttribL3dv(index: uint, v: double) void {
 pub fn VertexAttribL4dv(index: uint, v: double) void {
    return FuncTable.current.?.VertexAttribL4dv(index, v);
 }
-pub fn VertexAttribLPointer(index: uint, size: int, type: @"enum", stride: sizei, pointer: ?*const anyopaque) void {
-   return FuncTable.current.?.VertexAttribLPointer(index, size, type, stride, pointer);
+pub fn VertexAttribLPointer(index: uint, size: int, @"type": @"enum", stride: sizei, pointer: ?*const anyopaque) void {
+   return FuncTable.current.?.VertexAttribLPointer(index, size, @"type", stride, pointer);
 }
 pub fn GetVertexAttribLdv(index: uint, pname: @"enum", params: double) void {
    return FuncTable.current.?.GetVertexAttribLdv(index, pname, params);
@@ -2846,11 +2846,11 @@ pub fn GetDoublei_v(target: @"enum", index: uint, data: double) void {
 pub fn DrawArraysInstancedBaseInstance(mode: @"enum", first: int, count: sizei, instancecount: sizei, baseinstance: uint) void {
    return FuncTable.current.?.DrawArraysInstancedBaseInstance(mode, first, count, instancecount, baseinstance);
 }
-pub fn DrawElementsInstancedBaseInstance(mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, instancecount: sizei, baseinstance: uint) void {
-   return FuncTable.current.?.DrawElementsInstancedBaseInstance(mode, count, type, indices, instancecount, baseinstance);
+pub fn DrawElementsInstancedBaseInstance(mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, instancecount: sizei, baseinstance: uint) void {
+   return FuncTable.current.?.DrawElementsInstancedBaseInstance(mode, count, @"type", indices, instancecount, baseinstance);
 }
-pub fn DrawElementsInstancedBaseVertexBaseInstance(mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, instancecount: sizei, basevertex: int, baseinstance: uint) void {
-   return FuncTable.current.?.DrawElementsInstancedBaseVertexBaseInstance(mode, count, type, indices, instancecount, basevertex, baseinstance);
+pub fn DrawElementsInstancedBaseVertexBaseInstance(mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, instancecount: sizei, basevertex: int, baseinstance: uint) void {
+   return FuncTable.current.?.DrawElementsInstancedBaseVertexBaseInstance(mode, count, @"type", indices, instancecount, basevertex, baseinstance);
 }
 pub fn GetInternalformativ(target: @"enum", internalformat: @"enum", pname: @"enum", count: sizei, params: int) void {
    return FuncTable.current.?.GetInternalformativ(target, internalformat, pname, count, params);
@@ -2879,11 +2879,11 @@ pub fn DrawTransformFeedbackInstanced(mode: @"enum", id: uint, instancecount: si
 pub fn DrawTransformFeedbackStreamInstanced(mode: @"enum", id: uint, stream: uint, instancecount: sizei) void {
    return FuncTable.current.?.DrawTransformFeedbackStreamInstanced(mode, id, stream, instancecount);
 }
-pub fn ClearBufferData(target: @"enum", internalformat: @"enum", format: @"enum", type: @"enum", data: ?*const anyopaque) void {
-   return FuncTable.current.?.ClearBufferData(target, internalformat, format, type, data);
+pub fn ClearBufferData(target: @"enum", internalformat: @"enum", format: @"enum", @"type": @"enum", data: ?*const anyopaque) void {
+   return FuncTable.current.?.ClearBufferData(target, internalformat, format, @"type", data);
 }
-pub fn ClearBufferSubData(target: @"enum", internalformat: @"enum", offset: intptr, size: sizeiptr, format: @"enum", type: @"enum", data: ?*const anyopaque) void {
-   return FuncTable.current.?.ClearBufferSubData(target, internalformat, offset, size, format, type, data);
+pub fn ClearBufferSubData(target: @"enum", internalformat: @"enum", offset: intptr, size: sizeiptr, format: @"enum", @"type": @"enum", data: ?*const anyopaque) void {
+   return FuncTable.current.?.ClearBufferSubData(target, internalformat, offset, size, format, @"type", data);
 }
 pub fn DispatchCompute(num_groups_x: uint, num_groups_y: uint, num_groups_z: uint) void {
    return FuncTable.current.?.DispatchCompute(num_groups_x, num_groups_y, num_groups_z);
@@ -2924,8 +2924,8 @@ pub fn InvalidateSubFramebuffer(target: @"enum", numAttachments: sizei, attachme
 pub fn MultiDrawArraysIndirect(mode: @"enum", indirect: ?*const anyopaque, drawcount: sizei, stride: sizei) void {
    return FuncTable.current.?.MultiDrawArraysIndirect(mode, indirect, drawcount, stride);
 }
-pub fn MultiDrawElementsIndirect(mode: @"enum", type: @"enum", indirect: ?*const anyopaque, drawcount: sizei, stride: sizei) void {
-   return FuncTable.current.?.MultiDrawElementsIndirect(mode, type, indirect, drawcount, stride);
+pub fn MultiDrawElementsIndirect(mode: @"enum", @"type": @"enum", indirect: ?*const anyopaque, drawcount: sizei, stride: sizei) void {
+   return FuncTable.current.?.MultiDrawElementsIndirect(mode, @"type", indirect, drawcount, stride);
 }
 pub fn GetProgramInterfaceiv(program: uint, programInterface: @"enum", pname: @"enum", params: int) void {
    return FuncTable.current.?.GetProgramInterfaceiv(program, programInterface, pname, params);
@@ -2963,14 +2963,14 @@ pub fn TextureView(texture: uint, target: @"enum", origtexture: uint, internalfo
 pub fn BindVertexBuffer(bindingindex: uint, buffer: uint, offset: intptr, stride: sizei) void {
    return FuncTable.current.?.BindVertexBuffer(bindingindex, buffer, offset, stride);
 }
-pub fn VertexAttribFormat(attribindex: uint, size: int, type: @"enum", normalized: boolean, relativeoffset: uint) void {
-   return FuncTable.current.?.VertexAttribFormat(attribindex, size, type, normalized, relativeoffset);
+pub fn VertexAttribFormat(attribindex: uint, size: int, @"type": @"enum", normalized: boolean, relativeoffset: uint) void {
+   return FuncTable.current.?.VertexAttribFormat(attribindex, size, @"type", normalized, relativeoffset);
 }
-pub fn VertexAttribIFormat(attribindex: uint, size: int, type: @"enum", relativeoffset: uint) void {
-   return FuncTable.current.?.VertexAttribIFormat(attribindex, size, type, relativeoffset);
+pub fn VertexAttribIFormat(attribindex: uint, size: int, @"type": @"enum", relativeoffset: uint) void {
+   return FuncTable.current.?.VertexAttribIFormat(attribindex, size, @"type", relativeoffset);
 }
-pub fn VertexAttribLFormat(attribindex: uint, size: int, type: @"enum", relativeoffset: uint) void {
-   return FuncTable.current.?.VertexAttribLFormat(attribindex, size, type, relativeoffset);
+pub fn VertexAttribLFormat(attribindex: uint, size: int, @"type": @"enum", relativeoffset: uint) void {
+   return FuncTable.current.?.VertexAttribLFormat(attribindex, size, @"type", relativeoffset);
 }
 pub fn VertexAttribBinding(attribindex: uint, bindingindex: uint) void {
    return FuncTable.current.?.VertexAttribBinding(attribindex, bindingindex);
@@ -2978,11 +2978,11 @@ pub fn VertexAttribBinding(attribindex: uint, bindingindex: uint) void {
 pub fn VertexBindingDivisor(bindingindex: uint, divisor: uint) void {
    return FuncTable.current.?.VertexBindingDivisor(bindingindex, divisor);
 }
-pub fn DebugMessageControl(source: @"enum", type: @"enum", severity: @"enum", count: sizei, ids: uint, enabled: boolean) void {
-   return FuncTable.current.?.DebugMessageControl(source, type, severity, count, ids, enabled);
+pub fn DebugMessageControl(source: @"enum", @"type": @"enum", severity: @"enum", count: sizei, ids: uint, enabled: boolean) void {
+   return FuncTable.current.?.DebugMessageControl(source, @"type", severity, count, ids, enabled);
 }
-pub fn DebugMessageInsert(source: @"enum", type: @"enum", id: uint, severity: @"enum", length: sizei, buf: char) void {
-   return FuncTable.current.?.DebugMessageInsert(source, type, id, severity, length, buf);
+pub fn DebugMessageInsert(source: @"enum", @"type": @"enum", id: uint, severity: @"enum", length: sizei, buf: char) void {
+   return FuncTable.current.?.DebugMessageInsert(source, @"type", id, severity, length, buf);
 }
 pub fn DebugMessageCallback(callback: ?DEBUGPROC, userParam: ?*const anyopaque) void {
    return FuncTable.current.?.DebugMessageCallback(callback, userParam);
@@ -3014,11 +3014,11 @@ pub fn GetPointerv(pname: @"enum", params: ?*const anyopaque) void {
 pub fn BufferStorage(target: @"enum", size: sizeiptr, data: ?*const anyopaque, flags: bitfield) void {
    return FuncTable.current.?.BufferStorage(target, size, data, flags);
 }
-pub fn ClearTexImage(texture: uint, level: int, format: @"enum", type: @"enum", data: ?*const anyopaque) void {
-   return FuncTable.current.?.ClearTexImage(texture, level, format, type, data);
+pub fn ClearTexImage(texture: uint, level: int, format: @"enum", @"type": @"enum", data: ?*const anyopaque) void {
+   return FuncTable.current.?.ClearTexImage(texture, level, format, @"type", data);
 }
-pub fn ClearTexSubImage(texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", type: @"enum", data: ?*const anyopaque) void {
-   return FuncTable.current.?.ClearTexSubImage(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, type, data);
+pub fn ClearTexSubImage(texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", @"type": @"enum", data: ?*const anyopaque) void {
+   return FuncTable.current.?.ClearTexSubImage(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, @"type", data);
 }
 pub fn BindBuffersBase(target: @"enum", first: uint, count: sizei, buffers: uint) void {
    return FuncTable.current.?.BindBuffersBase(target, first, count, buffers);
@@ -3074,11 +3074,11 @@ pub fn NamedBufferSubData(buffer: uint, offset: intptr, size: sizeiptr, data: ?*
 pub fn CopyNamedBufferSubData(readBuffer: uint, writeBuffer: uint, readOffset: intptr, writeOffset: intptr, size: sizeiptr) void {
    return FuncTable.current.?.CopyNamedBufferSubData(readBuffer, writeBuffer, readOffset, writeOffset, size);
 }
-pub fn ClearNamedBufferData(buffer: uint, internalformat: @"enum", format: @"enum", type: @"enum", data: ?*const anyopaque) void {
-   return FuncTable.current.?.ClearNamedBufferData(buffer, internalformat, format, type, data);
+pub fn ClearNamedBufferData(buffer: uint, internalformat: @"enum", format: @"enum", @"type": @"enum", data: ?*const anyopaque) void {
+   return FuncTable.current.?.ClearNamedBufferData(buffer, internalformat, format, @"type", data);
 }
-pub fn ClearNamedBufferSubData(buffer: uint, internalformat: @"enum", offset: intptr, size: sizeiptr, format: @"enum", type: @"enum", data: ?*const anyopaque) void {
-   return FuncTable.current.?.ClearNamedBufferSubData(buffer, internalformat, offset, size, format, type, data);
+pub fn ClearNamedBufferSubData(buffer: uint, internalformat: @"enum", offset: intptr, size: sizeiptr, format: @"enum", @"type": @"enum", data: ?*const anyopaque) void {
+   return FuncTable.current.?.ClearNamedBufferSubData(buffer, internalformat, offset, size, format, @"type", data);
 }
 pub fn MapNamedBuffer(buffer: uint, access: @"enum") void {
    return FuncTable.current.?.MapNamedBuffer(buffer, access);
@@ -3194,14 +3194,14 @@ pub fn TextureStorage2DMultisample(texture: uint, samples: sizei, internalformat
 pub fn TextureStorage3DMultisample(texture: uint, samples: sizei, internalformat: @"enum", width: sizei, height: sizei, depth: sizei, fixedsamplelocations: boolean) void {
    return FuncTable.current.?.TextureStorage3DMultisample(texture, samples, internalformat, width, height, depth, fixedsamplelocations);
 }
-pub fn TextureSubImage1D(texture: uint, level: int, xoffset: int, width: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.TextureSubImage1D(texture, level, xoffset, width, format, type, pixels);
+pub fn TextureSubImage1D(texture: uint, level: int, xoffset: int, width: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.TextureSubImage1D(texture, level, xoffset, width, format, @"type", pixels);
 }
-pub fn TextureSubImage2D(texture: uint, level: int, xoffset: int, yoffset: int, width: sizei, height: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.TextureSubImage2D(texture, level, xoffset, yoffset, width, height, format, type, pixels);
+pub fn TextureSubImage2D(texture: uint, level: int, xoffset: int, yoffset: int, width: sizei, height: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.TextureSubImage2D(texture, level, xoffset, yoffset, width, height, format, @"type", pixels);
 }
-pub fn TextureSubImage3D(texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.TextureSubImage3D(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+pub fn TextureSubImage3D(texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.TextureSubImage3D(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, @"type", pixels);
 }
 pub fn CompressedTextureSubImage1D(texture: uint, level: int, xoffset: int, width: sizei, format: @"enum", imageSize: sizei, data: ?*const anyopaque) void {
    return FuncTable.current.?.CompressedTextureSubImage1D(texture, level, xoffset, width, format, imageSize, data);
@@ -3245,8 +3245,8 @@ pub fn GenerateTextureMipmap(texture: uint) void {
 pub fn BindTextureUnit(unit: uint, texture: uint) void {
    return FuncTable.current.?.BindTextureUnit(unit, texture);
 }
-pub fn GetTextureImage(texture: uint, level: int, format: @"enum", type: @"enum", bufSize: sizei, pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.GetTextureImage(texture, level, format, type, bufSize, pixels);
+pub fn GetTextureImage(texture: uint, level: int, format: @"enum", @"type": @"enum", bufSize: sizei, pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.GetTextureImage(texture, level, format, @"type", bufSize, pixels);
 }
 pub fn GetCompressedTextureImage(texture: uint, level: int, bufSize: sizei, pixels: ?*const anyopaque) void {
    return FuncTable.current.?.GetCompressedTextureImage(texture, level, bufSize, pixels);
@@ -3290,14 +3290,14 @@ pub fn VertexArrayVertexBuffers(vaobj: uint, first: uint, count: sizei, buffers:
 pub fn VertexArrayAttribBinding(vaobj: uint, attribindex: uint, bindingindex: uint) void {
    return FuncTable.current.?.VertexArrayAttribBinding(vaobj, attribindex, bindingindex);
 }
-pub fn VertexArrayAttribFormat(vaobj: uint, attribindex: uint, size: int, type: @"enum", normalized: boolean, relativeoffset: uint) void {
-   return FuncTable.current.?.VertexArrayAttribFormat(vaobj, attribindex, size, type, normalized, relativeoffset);
+pub fn VertexArrayAttribFormat(vaobj: uint, attribindex: uint, size: int, @"type": @"enum", normalized: boolean, relativeoffset: uint) void {
+   return FuncTable.current.?.VertexArrayAttribFormat(vaobj, attribindex, size, @"type", normalized, relativeoffset);
 }
-pub fn VertexArrayAttribIFormat(vaobj: uint, attribindex: uint, size: int, type: @"enum", relativeoffset: uint) void {
-   return FuncTable.current.?.VertexArrayAttribIFormat(vaobj, attribindex, size, type, relativeoffset);
+pub fn VertexArrayAttribIFormat(vaobj: uint, attribindex: uint, size: int, @"type": @"enum", relativeoffset: uint) void {
+   return FuncTable.current.?.VertexArrayAttribIFormat(vaobj, attribindex, size, @"type", relativeoffset);
 }
-pub fn VertexArrayAttribLFormat(vaobj: uint, attribindex: uint, size: int, type: @"enum", relativeoffset: uint) void {
-   return FuncTable.current.?.VertexArrayAttribLFormat(vaobj, attribindex, size, type, relativeoffset);
+pub fn VertexArrayAttribLFormat(vaobj: uint, attribindex: uint, size: int, @"type": @"enum", relativeoffset: uint) void {
+   return FuncTable.current.?.VertexArrayAttribLFormat(vaobj, attribindex, size, @"type", relativeoffset);
 }
 pub fn VertexArrayBindingDivisor(vaobj: uint, bindingindex: uint, divisor: uint) void {
    return FuncTable.current.?.VertexArrayBindingDivisor(vaobj, bindingindex, divisor);
@@ -3335,8 +3335,8 @@ pub fn GetQueryBufferObjectuiv(id: uint, buffer: uint, pname: @"enum", offset: i
 pub fn MemoryBarrierByRegion(barriers: bitfield) void {
    return FuncTable.current.?.MemoryBarrierByRegion(barriers);
 }
-pub fn GetTextureSubImage(texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", type: @"enum", bufSize: sizei, pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.GetTextureSubImage(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, type, bufSize, pixels);
+pub fn GetTextureSubImage(texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", @"type": @"enum", bufSize: sizei, pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.GetTextureSubImage(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, @"type", bufSize, pixels);
 }
 pub fn GetCompressedTextureSubImage(texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, bufSize: sizei, pixels: ?*const anyopaque) void {
    return FuncTable.current.?.GetCompressedTextureSubImage(texture, level, xoffset, yoffset, zoffset, width, height, depth, bufSize, pixels);
@@ -3347,8 +3347,8 @@ pub fn GetGraphicsResetStatus() @"enum" {
 pub fn GetnCompressedTexImage(target: @"enum", lod: int, bufSize: sizei, pixels: ?*const anyopaque) void {
    return FuncTable.current.?.GetnCompressedTexImage(target, lod, bufSize, pixels);
 }
-pub fn GetnTexImage(target: @"enum", level: int, format: @"enum", type: @"enum", bufSize: sizei, pixels: ?*const anyopaque) void {
-   return FuncTable.current.?.GetnTexImage(target, level, format, type, bufSize, pixels);
+pub fn GetnTexImage(target: @"enum", level: int, format: @"enum", @"type": @"enum", bufSize: sizei, pixels: ?*const anyopaque) void {
+   return FuncTable.current.?.GetnTexImage(target, level, format, @"type", bufSize, pixels);
 }
 pub fn GetnUniformdv(program: uint, location: int, bufSize: sizei, params: double) void {
    return FuncTable.current.?.GetnUniformdv(program, location, bufSize, params);
@@ -3362,8 +3362,8 @@ pub fn GetnUniformiv(program: uint, location: int, bufSize: sizei, params: int) 
 pub fn GetnUniformuiv(program: uint, location: int, bufSize: sizei, params: uint) void {
    return FuncTable.current.?.GetnUniformuiv(program, location, bufSize, params);
 }
-pub fn ReadnPixels(x: int, y: int, width: sizei, height: sizei, format: @"enum", type: @"enum", bufSize: sizei, data: ?*const anyopaque) void {
-   return FuncTable.current.?.ReadnPixels(x, y, width, height, format, type, bufSize, data);
+pub fn ReadnPixels(x: int, y: int, width: sizei, height: sizei, format: @"enum", @"type": @"enum", bufSize: sizei, data: ?*const anyopaque) void {
+   return FuncTable.current.?.ReadnPixels(x, y, width, height, format, @"type", bufSize, data);
 }
 pub fn TextureBarrier() void {
    return FuncTable.current.?.TextureBarrier();
@@ -3374,8 +3374,8 @@ pub fn SpecializeShader(shader: uint, pEntryPoint: char, numSpecializationConsta
 pub fn MultiDrawArraysIndirectCount(mode: @"enum", indirect: ?*const anyopaque, drawcount: intptr, maxdrawcount: sizei, stride: sizei) void {
    return FuncTable.current.?.MultiDrawArraysIndirectCount(mode, indirect, drawcount, maxdrawcount, stride);
 }
-pub fn MultiDrawElementsIndirectCount(mode: @"enum", type: @"enum", indirect: ?*const anyopaque, drawcount: intptr, maxdrawcount: sizei, stride: sizei) void {
-   return FuncTable.current.?.MultiDrawElementsIndirectCount(mode, type, indirect, drawcount, maxdrawcount, stride);
+pub fn MultiDrawElementsIndirectCount(mode: @"enum", @"type": @"enum", indirect: ?*const anyopaque, drawcount: intptr, maxdrawcount: sizei, stride: sizei) void {
+   return FuncTable.current.?.MultiDrawElementsIndirectCount(mode, @"type", indirect, drawcount, maxdrawcount, stride);
 }
 pub fn PolygonOffsetClamp(factor: float, units: float, clamp: float) void {
    return FuncTable.current.?.PolygonOffsetClamp(factor, units, clamp);
@@ -3397,8 +3397,8 @@ pub const FuncTable = struct {
    TexParameterfv: *const fn (target: @"enum", pname: @"enum", params: float) callconv(APIENTRY) void,
    TexParameteri: *const fn (target: @"enum", pname: @"enum", param: int) callconv(APIENTRY) void,
    TexParameteriv: *const fn (target: @"enum", pname: @"enum", params: int) callconv(APIENTRY) void,
-   TexImage1D: *const fn (target: @"enum", level: int, internalformat: int, width: sizei, border: int, format: @"enum", type: @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
-   TexImage2D: *const fn (target: @"enum", level: int, internalformat: int, width: sizei, height: sizei, border: int, format: @"enum", type: @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   TexImage1D: *const fn (target: @"enum", level: int, internalformat: int, width: sizei, border: int, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   TexImage2D: *const fn (target: @"enum", level: int, internalformat: int, width: sizei, height: sizei, border: int, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
    DrawBuffer: *const fn (buf: @"enum") callconv(APIENTRY) void,
    Clear: *const fn (mask: bitfield) callconv(APIENTRY) void,
    ClearColor: *const fn (red: float, green: float, blue: float, alpha: float) callconv(APIENTRY) void,
@@ -3419,14 +3419,14 @@ pub const FuncTable = struct {
    PixelStoref: *const fn (pname: @"enum", param: float) callconv(APIENTRY) void,
    PixelStorei: *const fn (pname: @"enum", param: int) callconv(APIENTRY) void,
    ReadBuffer: *const fn (src: @"enum") callconv(APIENTRY) void,
-   ReadPixels: *const fn (x: int, y: int, width: sizei, height: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   ReadPixels: *const fn (x: int, y: int, width: sizei, height: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
    GetBooleanv: *const fn (pname: @"enum", data: boolean) callconv(APIENTRY) void,
    GetDoublev: *const fn (pname: @"enum", data: double) callconv(APIENTRY) void,
    GetError: *const fn () callconv(APIENTRY) @"enum",
    GetFloatv: *const fn (pname: @"enum", data: float) callconv(APIENTRY) void,
    GetIntegerv: *const fn (pname: @"enum", data: int) callconv(APIENTRY) void,
    GetString: *const fn (name: @"enum") callconv(APIENTRY) ubyte,
-   GetTexImage: *const fn (target: @"enum", level: int, format: @"enum", type: @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   GetTexImage: *const fn (target: @"enum", level: int, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
    GetTexParameterfv: *const fn (target: @"enum", pname: @"enum", params: float) callconv(APIENTRY) void,
    GetTexParameteriv: *const fn (target: @"enum", pname: @"enum", params: int) callconv(APIENTRY) void,
    GetTexLevelParameterfv: *const fn (target: @"enum", level: int, pname: @"enum", params: float) callconv(APIENTRY) void,
@@ -3441,18 +3441,18 @@ pub const FuncTable = struct {
    FramebufferTexture: *const fn (target: @"enum", attachment: @"enum", texture: uint, level: int) callconv(APIENTRY) void,
    GetBufferParameteri64v: *const fn (target: @"enum", pname: @"enum", params: int64) callconv(APIENTRY) void,
    GetInteger64i_v: *const fn (target: @"enum", index: uint, data: int64) callconv(APIENTRY) void,
-   GetSynciv: *const fn (sync: sync, pname: @"enum", count: sizei, length: sizei, values: int) callconv(APIENTRY) void,
+   GetSynciv: *const fn (_sync: sync, pname: @"enum", count: sizei, length: sizei, values: int) callconv(APIENTRY) void,
    GetInteger64v: *const fn (pname: @"enum", data: int64) callconv(APIENTRY) void,
-   WaitSync: *const fn (sync: sync, flags: bitfield, timeout: uint64) callconv(APIENTRY) void,
-   ClientWaitSync: *const fn (sync: sync, flags: bitfield, timeout: uint64) callconv(APIENTRY) @"enum",
-   DeleteSync: *const fn (sync: sync) callconv(APIENTRY) void,
-   IsSync: *const fn (sync: sync) callconv(APIENTRY) boolean,
+   WaitSync: *const fn (_sync: sync, flags: bitfield, timeout: uint64) callconv(APIENTRY) void,
+   ClientWaitSync: *const fn (_sync: sync, flags: bitfield, timeout: uint64) callconv(APIENTRY) @"enum",
+   DeleteSync: *const fn (_sync: sync) callconv(APIENTRY) void,
+   IsSync: *const fn (_sync: sync) callconv(APIENTRY) boolean,
    FenceSync: *const fn (condition: @"enum", flags: bitfield) callconv(APIENTRY) sync,
    ProvokingVertex: *const fn (mode: @"enum") callconv(APIENTRY) void,
-   MultiDrawElementsBaseVertex: *const fn (mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, drawcount: sizei, basevertex: int) callconv(APIENTRY) void,
-   DrawElementsInstancedBaseVertex: *const fn (mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, instancecount: sizei, basevertex: int) callconv(APIENTRY) void,
-   DrawRangeElementsBaseVertex: *const fn (mode: @"enum", start: uint, end: uint, count: sizei, type: @"enum", indices: ?*const anyopaque, basevertex: int) callconv(APIENTRY) void,
-   DrawElementsBaseVertex: *const fn (mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, basevertex: int) callconv(APIENTRY) void,
+   MultiDrawElementsBaseVertex: *const fn (mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, drawcount: sizei, basevertex: int) callconv(APIENTRY) void,
+   DrawElementsInstancedBaseVertex: *const fn (mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, instancecount: sizei, basevertex: int) callconv(APIENTRY) void,
+   DrawRangeElementsBaseVertex: *const fn (mode: @"enum", start: uint, end: uint, count: sizei, @"type": @"enum", indices: ?*const anyopaque, basevertex: int) callconv(APIENTRY) void,
+   DrawElementsBaseVertex: *const fn (mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, basevertex: int) callconv(APIENTRY) void,
    UniformBlockBinding: *const fn (program: uint, uniformBlockIndex: uint, uniformBlockBinding: uint) callconv(APIENTRY) void,
    GetActiveUniformBlockName: *const fn (program: uint, uniformBlockIndex: uint, bufSize: sizei, length: sizei, uniformBlockName: char) callconv(APIENTRY) void,
    GetActiveUniformBlockiv: *const fn (program: uint, uniformBlockIndex: uint, pname: @"enum", params: int) callconv(APIENTRY) void,
@@ -3463,7 +3463,7 @@ pub const FuncTable = struct {
    CopyBufferSubData: *const fn (readTarget: @"enum", writeTarget: @"enum", readOffset: intptr, writeOffset: intptr, size: sizeiptr) callconv(APIENTRY) void,
    PrimitiveRestartIndex: *const fn (index: uint) callconv(APIENTRY) void,
    TexBuffer: *const fn (target: @"enum", internalformat: @"enum", buffer: uint) callconv(APIENTRY) void,
-   DrawElementsInstanced: *const fn (mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, instancecount: sizei) callconv(APIENTRY) void,
+   DrawElementsInstanced: *const fn (mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, instancecount: sizei) callconv(APIENTRY) void,
    DrawArraysInstanced: *const fn (mode: @"enum", first: int, count: sizei, instancecount: sizei) callconv(APIENTRY) void,
    IsVertexArray: *const fn (array: uint) callconv(APIENTRY) boolean,
    GenVertexArrays: *const fn (n: sizei, arrays: uint) callconv(APIENTRY) void,
@@ -3533,11 +3533,11 @@ pub const FuncTable = struct {
    VertexAttribI1i: *const fn (index: uint, x: int) callconv(APIENTRY) void,
    GetVertexAttribIuiv: *const fn (index: uint, pname: @"enum", params: uint) callconv(APIENTRY) void,
    GetVertexAttribIiv: *const fn (index: uint, pname: @"enum", params: int) callconv(APIENTRY) void,
-   VertexAttribIPointer: *const fn (index: uint, size: int, type: @"enum", stride: sizei, pointer: ?*const anyopaque) callconv(APIENTRY) void,
+   VertexAttribIPointer: *const fn (index: uint, size: int, @"type": @"enum", stride: sizei, pointer: ?*const anyopaque) callconv(APIENTRY) void,
    EndConditionalRender: *const fn () callconv(APIENTRY) void,
    BeginConditionalRender: *const fn (id: uint, mode: @"enum") callconv(APIENTRY) void,
    ClampColor: *const fn (target: @"enum", clamp: @"enum") callconv(APIENTRY) void,
-   GetTransformFeedbackVarying: *const fn (program: uint, index: uint, bufSize: sizei, length: sizei, size: sizei, type: @"enum", name: char) callconv(APIENTRY) void,
+   GetTransformFeedbackVarying: *const fn (program: uint, index: uint, bufSize: sizei, length: sizei, size: sizei, @"type": @"enum", name: char) callconv(APIENTRY) void,
    TransformFeedbackVaryings: *const fn (program: uint, count: sizei, varyings: char, bufferMode: @"enum") callconv(APIENTRY) void,
    EndTransformFeedback: *const fn () callconv(APIENTRY) void,
    BeginTransformFeedback: *const fn (primitiveMode: @"enum") callconv(APIENTRY) void,
@@ -3552,7 +3552,7 @@ pub const FuncTable = struct {
    UniformMatrix2x4fv: *const fn (location: int, count: sizei, transpose: boolean, value: float) callconv(APIENTRY) void,
    UniformMatrix3x2fv: *const fn (location: int, count: sizei, transpose: boolean, value: float) callconv(APIENTRY) void,
    UniformMatrix2x3fv: *const fn (location: int, count: sizei, transpose: boolean, value: float) callconv(APIENTRY) void,
-   VertexAttribPointer: *const fn (index: uint, size: int, type: @"enum", normalized: boolean, stride: sizei, pointer: ?*const anyopaque) callconv(APIENTRY) void,
+   VertexAttribPointer: *const fn (index: uint, size: int, @"type": @"enum", normalized: boolean, stride: sizei, pointer: ?*const anyopaque) callconv(APIENTRY) void,
    VertexAttrib4usv: *const fn (index: uint, v: ushort) callconv(APIENTRY) void,
    VertexAttrib4uiv: *const fn (index: uint, v: uint) callconv(APIENTRY) void,
    VertexAttrib4ubv: *const fn (index: uint, v: ubyte) callconv(APIENTRY) void,
@@ -3628,14 +3628,14 @@ pub const FuncTable = struct {
    GetProgramiv: *const fn (program: uint, pname: @"enum", params: int) callconv(APIENTRY) void,
    GetAttribLocation: *const fn (program: uint, name: char) callconv(APIENTRY) int,
    GetAttachedShaders: *const fn (program: uint, maxCount: sizei, count: sizei, shaders: uint) callconv(APIENTRY) void,
-   GetActiveUniform: *const fn (program: uint, index: uint, bufSize: sizei, length: sizei, size: int, type: @"enum", name: char) callconv(APIENTRY) void,
-   GetActiveAttrib: *const fn (program: uint, index: uint, bufSize: sizei, length: sizei, size: int, type: @"enum", name: char) callconv(APIENTRY) void,
+   GetActiveUniform: *const fn (program: uint, index: uint, bufSize: sizei, length: sizei, size: int, @"type": @"enum", name: char) callconv(APIENTRY) void,
+   GetActiveAttrib: *const fn (program: uint, index: uint, bufSize: sizei, length: sizei, size: int, @"type": @"enum", name: char) callconv(APIENTRY) void,
    EnableVertexAttribArray: *const fn (index: uint) callconv(APIENTRY) void,
    DisableVertexAttribArray: *const fn (index: uint) callconv(APIENTRY) void,
    DetachShader: *const fn (program: uint, shader: uint) callconv(APIENTRY) void,
    DeleteShader: *const fn (shader: uint) callconv(APIENTRY) void,
    DeleteProgram: *const fn (program: uint) callconv(APIENTRY) void,
-   CreateShader: *const fn (type: @"enum") callconv(APIENTRY) uint,
+   CreateShader: *const fn (@"type": @"enum") callconv(APIENTRY) uint,
    CreateProgram: *const fn () callconv(APIENTRY) uint,
    CompileShader: *const fn (shader: uint) callconv(APIENTRY) void,
    BindAttribLocation: *const fn (program: uint, index: uint, name: char) callconv(APIENTRY) void,
@@ -3681,21 +3681,21 @@ pub const FuncTable = struct {
    PointParameteri: *const fn (pname: @"enum", param: int) callconv(APIENTRY) void,
    PointParameterfv: *const fn (pname: @"enum", params: float) callconv(APIENTRY) void,
    PointParameterf: *const fn (pname: @"enum", param: float) callconv(APIENTRY) void,
-   MultiDrawElements: *const fn (mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, drawcount: sizei) callconv(APIENTRY) void,
+   MultiDrawElements: *const fn (mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, drawcount: sizei) callconv(APIENTRY) void,
    MultiDrawArrays: *const fn (mode: @"enum", first: int, count: sizei, drawcount: sizei) callconv(APIENTRY) void,
-   DrawRangeElements: *const fn (mode: @"enum", start: uint, end: uint, count: sizei, type: @"enum", indices: ?*const anyopaque) callconv(APIENTRY) void,
-   TexImage3D: *const fn (target: @"enum", level: int, internalformat: int, width: sizei, height: sizei, depth: sizei, border: int, format: @"enum", type: @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
-   TexSubImage3D: *const fn (target: @"enum", level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   DrawRangeElements: *const fn (mode: @"enum", start: uint, end: uint, count: sizei, @"type": @"enum", indices: ?*const anyopaque) callconv(APIENTRY) void,
+   TexImage3D: *const fn (target: @"enum", level: int, internalformat: int, width: sizei, height: sizei, depth: sizei, border: int, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   TexSubImage3D: *const fn (target: @"enum", level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
    DrawArrays: *const fn (mode: @"enum", first: int, count: sizei) callconv(APIENTRY) void,
-   DrawElements: *const fn (mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque) callconv(APIENTRY) void,
+   DrawElements: *const fn (mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque) callconv(APIENTRY) void,
    CompressedTexSubImage3D: *const fn (target: @"enum", level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", imageSize: sizei, data: ?*const anyopaque) callconv(APIENTRY) void,
    PolygonOffset: *const fn (factor: float, units: float) callconv(APIENTRY) void,
    CopyTexImage1D: *const fn (target: @"enum", level: int, internalformat: @"enum", x: int, y: int, width: sizei, border: int) callconv(APIENTRY) void,
    CopyTexImage2D: *const fn (target: @"enum", level: int, internalformat: @"enum", x: int, y: int, width: sizei, height: sizei, border: int) callconv(APIENTRY) void,
    CopyTexSubImage1D: *const fn (target: @"enum", level: int, xoffset: int, x: int, y: int, width: sizei) callconv(APIENTRY) void,
    CopyTexSubImage2D: *const fn (target: @"enum", level: int, xoffset: int, yoffset: int, x: int, y: int, width: sizei, height: sizei) callconv(APIENTRY) void,
-   TexSubImage1D: *const fn (target: @"enum", level: int, xoffset: int, width: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
-   TexSubImage2D: *const fn (target: @"enum", level: int, xoffset: int, yoffset: int, width: sizei, height: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   TexSubImage1D: *const fn (target: @"enum", level: int, xoffset: int, width: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   TexSubImage2D: *const fn (target: @"enum", level: int, xoffset: int, yoffset: int, width: sizei, height: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
    BindTexture: *const fn (target: @"enum", texture: uint) callconv(APIENTRY) void,
    DeleteTextures: *const fn (n: sizei, textures: uint) callconv(APIENTRY) void,
    GenTextures: *const fn (n: sizei, textures: uint) callconv(APIENTRY) void,
@@ -3719,21 +3719,21 @@ pub const FuncTable = struct {
    GetQueryObjecti64v: *const fn (id: uint, pname: @"enum", params: int64) callconv(APIENTRY) void,
    GetQueryObjectui64v: *const fn (id: uint, pname: @"enum", params: uint64) callconv(APIENTRY) void,
    VertexAttribDivisor: *const fn (index: uint, divisor: uint) callconv(APIENTRY) void,
-   VertexAttribP1ui: *const fn (index: uint, type: @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
-   VertexAttribP1uiv: *const fn (index: uint, type: @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
-   VertexAttribP2ui: *const fn (index: uint, type: @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
-   VertexAttribP2uiv: *const fn (index: uint, type: @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
-   VertexAttribP3ui: *const fn (index: uint, type: @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
-   VertexAttribP3uiv: *const fn (index: uint, type: @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
-   VertexAttribP4ui: *const fn (index: uint, type: @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
-   VertexAttribP4uiv: *const fn (index: uint, type: @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
+   VertexAttribP1ui: *const fn (index: uint, @"type": @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
+   VertexAttribP1uiv: *const fn (index: uint, @"type": @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
+   VertexAttribP2ui: *const fn (index: uint, @"type": @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
+   VertexAttribP2uiv: *const fn (index: uint, @"type": @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
+   VertexAttribP3ui: *const fn (index: uint, @"type": @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
+   VertexAttribP3uiv: *const fn (index: uint, @"type": @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
+   VertexAttribP4ui: *const fn (index: uint, @"type": @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
+   VertexAttribP4uiv: *const fn (index: uint, @"type": @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
    MinSampleShading: *const fn (value: float) callconv(APIENTRY) void,
    BlendEquationi: *const fn (buf: uint, mode: @"enum") callconv(APIENTRY) void,
    BlendEquationSeparatei: *const fn (buf: uint, modeRGB: @"enum", modeAlpha: @"enum") callconv(APIENTRY) void,
    BlendFunci: *const fn (buf: uint, src: @"enum", dst: @"enum") callconv(APIENTRY) void,
    BlendFuncSeparatei: *const fn (buf: uint, srcRGB: @"enum", dstRGB: @"enum", srcAlpha: @"enum", dstAlpha: @"enum") callconv(APIENTRY) void,
    DrawArraysIndirect: *const fn (mode: @"enum", indirect: ?*const anyopaque) callconv(APIENTRY) void,
-   DrawElementsIndirect: *const fn (mode: @"enum", type: @"enum", indirect: ?*const anyopaque) callconv(APIENTRY) void,
+   DrawElementsIndirect: *const fn (mode: @"enum", @"type": @"enum", indirect: ?*const anyopaque) callconv(APIENTRY) void,
    Uniform1d: *const fn (location: int, x: double) callconv(APIENTRY) void,
    Uniform2d: *const fn (location: int, x: double, y: double) callconv(APIENTRY) void,
    Uniform3d: *const fn (location: int, x: double, y: double, z: double) callconv(APIENTRY) void,
@@ -3782,7 +3782,7 @@ pub const FuncTable = struct {
    ProgramBinary: *const fn (program: uint, binaryFormat: @"enum", binary: ?*const anyopaque, length: sizei) callconv(APIENTRY) void,
    UseProgramStages: *const fn (pipeline: uint, stages: bitfield, program: uint) callconv(APIENTRY) void,
    ActiveShaderProgram: *const fn (pipeline: uint, program: uint) callconv(APIENTRY) void,
-   CreateShaderProgramv: *const fn (type: @"enum", count: sizei, strings: char) callconv(APIENTRY) uint,
+   CreateShaderProgramv: *const fn (@"type": @"enum", count: sizei, strings: char) callconv(APIENTRY) uint,
    BindProgramPipeline: *const fn (pipeline: uint) callconv(APIENTRY) void,
    DeleteProgramPipelines: *const fn (n: sizei, pipelines: uint) callconv(APIENTRY) void,
    GenProgramPipelines: *const fn (n: sizei, pipelines: uint) callconv(APIENTRY) void,
@@ -3848,7 +3848,7 @@ pub const FuncTable = struct {
    VertexAttribL2dv: *const fn (index: uint, v: double) callconv(APIENTRY) void,
    VertexAttribL3dv: *const fn (index: uint, v: double) callconv(APIENTRY) void,
    VertexAttribL4dv: *const fn (index: uint, v: double) callconv(APIENTRY) void,
-   VertexAttribLPointer: *const fn (index: uint, size: int, type: @"enum", stride: sizei, pointer: ?*const anyopaque) callconv(APIENTRY) void,
+   VertexAttribLPointer: *const fn (index: uint, size: int, @"type": @"enum", stride: sizei, pointer: ?*const anyopaque) callconv(APIENTRY) void,
    GetVertexAttribLdv: *const fn (index: uint, pname: @"enum", params: double) callconv(APIENTRY) void,
    ViewportArrayv: *const fn (first: uint, count: sizei, v: float) callconv(APIENTRY) void,
    ViewportIndexedf: *const fn (index: uint, x: float, y: float, w: float, h: float) callconv(APIENTRY) void,
@@ -3861,8 +3861,8 @@ pub const FuncTable = struct {
    GetFloati_v: *const fn (target: @"enum", index: uint, data: float) callconv(APIENTRY) void,
    GetDoublei_v: *const fn (target: @"enum", index: uint, data: double) callconv(APIENTRY) void,
    DrawArraysInstancedBaseInstance: *const fn (mode: @"enum", first: int, count: sizei, instancecount: sizei, baseinstance: uint) callconv(APIENTRY) void,
-   DrawElementsInstancedBaseInstance: *const fn (mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, instancecount: sizei, baseinstance: uint) callconv(APIENTRY) void,
-   DrawElementsInstancedBaseVertexBaseInstance: *const fn (mode: @"enum", count: sizei, type: @"enum", indices: ?*const anyopaque, instancecount: sizei, basevertex: int, baseinstance: uint) callconv(APIENTRY) void,
+   DrawElementsInstancedBaseInstance: *const fn (mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, instancecount: sizei, baseinstance: uint) callconv(APIENTRY) void,
+   DrawElementsInstancedBaseVertexBaseInstance: *const fn (mode: @"enum", count: sizei, @"type": @"enum", indices: ?*const anyopaque, instancecount: sizei, basevertex: int, baseinstance: uint) callconv(APIENTRY) void,
    GetInternalformativ: *const fn (target: @"enum", internalformat: @"enum", pname: @"enum", count: sizei, params: int) callconv(APIENTRY) void,
    GetActiveAtomicCounterBufferiv: *const fn (program: uint, bufferIndex: uint, pname: @"enum", params: int) callconv(APIENTRY) void,
    BindImageTexture: *const fn (unit: uint, texture: uint, level: int, layered: boolean, layer: int, access: @"enum", format: @"enum") callconv(APIENTRY) void,
@@ -3872,8 +3872,8 @@ pub const FuncTable = struct {
    TexStorage3D: *const fn (target: @"enum", levels: sizei, internalformat: @"enum", width: sizei, height: sizei, depth: sizei) callconv(APIENTRY) void,
    DrawTransformFeedbackInstanced: *const fn (mode: @"enum", id: uint, instancecount: sizei) callconv(APIENTRY) void,
    DrawTransformFeedbackStreamInstanced: *const fn (mode: @"enum", id: uint, stream: uint, instancecount: sizei) callconv(APIENTRY) void,
-   ClearBufferData: *const fn (target: @"enum", internalformat: @"enum", format: @"enum", type: @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
-   ClearBufferSubData: *const fn (target: @"enum", internalformat: @"enum", offset: intptr, size: sizeiptr, format: @"enum", type: @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
+   ClearBufferData: *const fn (target: @"enum", internalformat: @"enum", format: @"enum", @"type": @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
+   ClearBufferSubData: *const fn (target: @"enum", internalformat: @"enum", offset: intptr, size: sizeiptr, format: @"enum", @"type": @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
    DispatchCompute: *const fn (num_groups_x: uint, num_groups_y: uint, num_groups_z: uint) callconv(APIENTRY) void,
    DispatchComputeIndirect: *const fn (indirect: intptr) callconv(APIENTRY) void,
    CopyImageSubData: *const fn (srcName: uint, srcTarget: @"enum", srcLevel: int, srcX: int, srcY: int, srcZ: int, dstName: uint, dstTarget: @"enum", dstLevel: int, dstX: int, dstY: int, dstZ: int, srcWidth: sizei, srcHeight: sizei, srcDepth: sizei) callconv(APIENTRY) void,
@@ -3887,7 +3887,7 @@ pub const FuncTable = struct {
    InvalidateFramebuffer: *const fn (target: @"enum", numAttachments: sizei, attachments: @"enum") callconv(APIENTRY) void,
    InvalidateSubFramebuffer: *const fn (target: @"enum", numAttachments: sizei, attachments: @"enum", x: int, y: int, width: sizei, height: sizei) callconv(APIENTRY) void,
    MultiDrawArraysIndirect: *const fn (mode: @"enum", indirect: ?*const anyopaque, drawcount: sizei, stride: sizei) callconv(APIENTRY) void,
-   MultiDrawElementsIndirect: *const fn (mode: @"enum", type: @"enum", indirect: ?*const anyopaque, drawcount: sizei, stride: sizei) callconv(APIENTRY) void,
+   MultiDrawElementsIndirect: *const fn (mode: @"enum", @"type": @"enum", indirect: ?*const anyopaque, drawcount: sizei, stride: sizei) callconv(APIENTRY) void,
    GetProgramInterfaceiv: *const fn (program: uint, programInterface: @"enum", pname: @"enum", params: int) callconv(APIENTRY) void,
    GetProgramResourceIndex: *const fn (program: uint, programInterface: @"enum", name: char) callconv(APIENTRY) uint,
    GetProgramResourceName: *const fn (program: uint, programInterface: @"enum", index: uint, bufSize: sizei, length: sizei, name: char) callconv(APIENTRY) void,
@@ -3900,13 +3900,13 @@ pub const FuncTable = struct {
    TexStorage3DMultisample: *const fn (target: @"enum", samples: sizei, internalformat: @"enum", width: sizei, height: sizei, depth: sizei, fixedsamplelocations: boolean) callconv(APIENTRY) void,
    TextureView: *const fn (texture: uint, target: @"enum", origtexture: uint, internalformat: @"enum", minlevel: uint, numlevels: uint, minlayer: uint, numlayers: uint) callconv(APIENTRY) void,
    BindVertexBuffer: *const fn (bindingindex: uint, buffer: uint, offset: intptr, stride: sizei) callconv(APIENTRY) void,
-   VertexAttribFormat: *const fn (attribindex: uint, size: int, type: @"enum", normalized: boolean, relativeoffset: uint) callconv(APIENTRY) void,
-   VertexAttribIFormat: *const fn (attribindex: uint, size: int, type: @"enum", relativeoffset: uint) callconv(APIENTRY) void,
-   VertexAttribLFormat: *const fn (attribindex: uint, size: int, type: @"enum", relativeoffset: uint) callconv(APIENTRY) void,
+   VertexAttribFormat: *const fn (attribindex: uint, size: int, @"type": @"enum", normalized: boolean, relativeoffset: uint) callconv(APIENTRY) void,
+   VertexAttribIFormat: *const fn (attribindex: uint, size: int, @"type": @"enum", relativeoffset: uint) callconv(APIENTRY) void,
+   VertexAttribLFormat: *const fn (attribindex: uint, size: int, @"type": @"enum", relativeoffset: uint) callconv(APIENTRY) void,
    VertexAttribBinding: *const fn (attribindex: uint, bindingindex: uint) callconv(APIENTRY) void,
    VertexBindingDivisor: *const fn (bindingindex: uint, divisor: uint) callconv(APIENTRY) void,
-   DebugMessageControl: *const fn (source: @"enum", type: @"enum", severity: @"enum", count: sizei, ids: uint, enabled: boolean) callconv(APIENTRY) void,
-   DebugMessageInsert: *const fn (source: @"enum", type: @"enum", id: uint, severity: @"enum", length: sizei, buf: char) callconv(APIENTRY) void,
+   DebugMessageControl: *const fn (source: @"enum", @"type": @"enum", severity: @"enum", count: sizei, ids: uint, enabled: boolean) callconv(APIENTRY) void,
+   DebugMessageInsert: *const fn (source: @"enum", @"type": @"enum", id: uint, severity: @"enum", length: sizei, buf: char) callconv(APIENTRY) void,
    DebugMessageCallback: *const fn (callback: ?DEBUGPROC, userParam: ?*const anyopaque) callconv(APIENTRY) void,
    GetDebugMessageLog: *const fn (count: uint, bufSize: sizei, sources: @"enum", types: @"enum", ids: uint, severities: @"enum", lengths: sizei, messageLog: char) callconv(APIENTRY) uint,
    PushDebugGroup: *const fn (source: @"enum", id: uint, length: sizei, message: char) callconv(APIENTRY) void,
@@ -3917,8 +3917,8 @@ pub const FuncTable = struct {
    GetObjectPtrLabel: *const fn (ptr: ?*const anyopaque, bufSize: sizei, length: sizei, label: char) callconv(APIENTRY) void,
    GetPointerv: *const fn (pname: @"enum", params: ?*const anyopaque) callconv(APIENTRY) void,
    BufferStorage: *const fn (target: @"enum", size: sizeiptr, data: ?*const anyopaque, flags: bitfield) callconv(APIENTRY) void,
-   ClearTexImage: *const fn (texture: uint, level: int, format: @"enum", type: @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
-   ClearTexSubImage: *const fn (texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", type: @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
+   ClearTexImage: *const fn (texture: uint, level: int, format: @"enum", @"type": @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
+   ClearTexSubImage: *const fn (texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", @"type": @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
    BindBuffersBase: *const fn (target: @"enum", first: uint, count: sizei, buffers: uint) callconv(APIENTRY) void,
    BindBuffersRange: *const fn (target: @"enum", first: uint, count: sizei, buffers: uint, offsets: intptr, sizes: sizeiptr) callconv(APIENTRY) void,
    BindTextures: *const fn (first: uint, count: sizei, textures: uint) callconv(APIENTRY) void,
@@ -3937,8 +3937,8 @@ pub const FuncTable = struct {
    NamedBufferData: *const fn (buffer: uint, size: sizeiptr, data: ?*const anyopaque, usage: @"enum") callconv(APIENTRY) void,
    NamedBufferSubData: *const fn (buffer: uint, offset: intptr, size: sizeiptr, data: ?*const anyopaque) callconv(APIENTRY) void,
    CopyNamedBufferSubData: *const fn (readBuffer: uint, writeBuffer: uint, readOffset: intptr, writeOffset: intptr, size: sizeiptr) callconv(APIENTRY) void,
-   ClearNamedBufferData: *const fn (buffer: uint, internalformat: @"enum", format: @"enum", type: @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
-   ClearNamedBufferSubData: *const fn (buffer: uint, internalformat: @"enum", offset: intptr, size: sizeiptr, format: @"enum", type: @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
+   ClearNamedBufferData: *const fn (buffer: uint, internalformat: @"enum", format: @"enum", @"type": @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
+   ClearNamedBufferSubData: *const fn (buffer: uint, internalformat: @"enum", offset: intptr, size: sizeiptr, format: @"enum", @"type": @"enum", data: ?*const anyopaque) callconv(APIENTRY) void,
    MapNamedBuffer: *const fn (buffer: uint, access: @"enum") callconv(APIENTRY) void,
    MapNamedBufferRange: *const fn (buffer: uint, offset: intptr, length: sizeiptr, access: bitfield) callconv(APIENTRY) void,
    UnmapNamedBuffer: *const fn (buffer: uint) callconv(APIENTRY) boolean,
@@ -3977,9 +3977,9 @@ pub const FuncTable = struct {
    TextureStorage3D: *const fn (texture: uint, levels: sizei, internalformat: @"enum", width: sizei, height: sizei, depth: sizei) callconv(APIENTRY) void,
    TextureStorage2DMultisample: *const fn (texture: uint, samples: sizei, internalformat: @"enum", width: sizei, height: sizei, fixedsamplelocations: boolean) callconv(APIENTRY) void,
    TextureStorage3DMultisample: *const fn (texture: uint, samples: sizei, internalformat: @"enum", width: sizei, height: sizei, depth: sizei, fixedsamplelocations: boolean) callconv(APIENTRY) void,
-   TextureSubImage1D: *const fn (texture: uint, level: int, xoffset: int, width: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
-   TextureSubImage2D: *const fn (texture: uint, level: int, xoffset: int, yoffset: int, width: sizei, height: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
-   TextureSubImage3D: *const fn (texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", type: @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   TextureSubImage1D: *const fn (texture: uint, level: int, xoffset: int, width: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   TextureSubImage2D: *const fn (texture: uint, level: int, xoffset: int, yoffset: int, width: sizei, height: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   TextureSubImage3D: *const fn (texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", @"type": @"enum", pixels: ?*const anyopaque) callconv(APIENTRY) void,
    CompressedTextureSubImage1D: *const fn (texture: uint, level: int, xoffset: int, width: sizei, format: @"enum", imageSize: sizei, data: ?*const anyopaque) callconv(APIENTRY) void,
    CompressedTextureSubImage2D: *const fn (texture: uint, level: int, xoffset: int, yoffset: int, width: sizei, height: sizei, format: @"enum", imageSize: sizei, data: ?*const anyopaque) callconv(APIENTRY) void,
    CompressedTextureSubImage3D: *const fn (texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", imageSize: sizei, data: ?*const anyopaque) callconv(APIENTRY) void,
@@ -3994,7 +3994,7 @@ pub const FuncTable = struct {
    TextureParameteriv: *const fn (texture: uint, pname: @"enum", param: int) callconv(APIENTRY) void,
    GenerateTextureMipmap: *const fn (texture: uint) callconv(APIENTRY) void,
    BindTextureUnit: *const fn (unit: uint, texture: uint) callconv(APIENTRY) void,
-   GetTextureImage: *const fn (texture: uint, level: int, format: @"enum", type: @"enum", bufSize: sizei, pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   GetTextureImage: *const fn (texture: uint, level: int, format: @"enum", @"type": @"enum", bufSize: sizei, pixels: ?*const anyopaque) callconv(APIENTRY) void,
    GetCompressedTextureImage: *const fn (texture: uint, level: int, bufSize: sizei, pixels: ?*const anyopaque) callconv(APIENTRY) void,
    GetTextureLevelParameterfv: *const fn (texture: uint, level: int, pname: @"enum", params: float) callconv(APIENTRY) void,
    GetTextureLevelParameteriv: *const fn (texture: uint, level: int, pname: @"enum", params: int) callconv(APIENTRY) void,
@@ -4009,9 +4009,9 @@ pub const FuncTable = struct {
    VertexArrayVertexBuffer: *const fn (vaobj: uint, bindingindex: uint, buffer: uint, offset: intptr, stride: sizei) callconv(APIENTRY) void,
    VertexArrayVertexBuffers: *const fn (vaobj: uint, first: uint, count: sizei, buffers: uint, offsets: intptr, strides: sizei) callconv(APIENTRY) void,
    VertexArrayAttribBinding: *const fn (vaobj: uint, attribindex: uint, bindingindex: uint) callconv(APIENTRY) void,
-   VertexArrayAttribFormat: *const fn (vaobj: uint, attribindex: uint, size: int, type: @"enum", normalized: boolean, relativeoffset: uint) callconv(APIENTRY) void,
-   VertexArrayAttribIFormat: *const fn (vaobj: uint, attribindex: uint, size: int, type: @"enum", relativeoffset: uint) callconv(APIENTRY) void,
-   VertexArrayAttribLFormat: *const fn (vaobj: uint, attribindex: uint, size: int, type: @"enum", relativeoffset: uint) callconv(APIENTRY) void,
+   VertexArrayAttribFormat: *const fn (vaobj: uint, attribindex: uint, size: int, @"type": @"enum", normalized: boolean, relativeoffset: uint) callconv(APIENTRY) void,
+   VertexArrayAttribIFormat: *const fn (vaobj: uint, attribindex: uint, size: int, @"type": @"enum", relativeoffset: uint) callconv(APIENTRY) void,
+   VertexArrayAttribLFormat: *const fn (vaobj: uint, attribindex: uint, size: int, @"type": @"enum", relativeoffset: uint) callconv(APIENTRY) void,
    VertexArrayBindingDivisor: *const fn (vaobj: uint, bindingindex: uint, divisor: uint) callconv(APIENTRY) void,
    GetVertexArrayiv: *const fn (vaobj: uint, pname: @"enum", param: int) callconv(APIENTRY) void,
    GetVertexArrayIndexediv: *const fn (vaobj: uint, index: uint, pname: @"enum", param: int) callconv(APIENTRY) void,
@@ -4024,20 +4024,20 @@ pub const FuncTable = struct {
    GetQueryBufferObjectui64v: *const fn (id: uint, buffer: uint, pname: @"enum", offset: intptr) callconv(APIENTRY) void,
    GetQueryBufferObjectuiv: *const fn (id: uint, buffer: uint, pname: @"enum", offset: intptr) callconv(APIENTRY) void,
    MemoryBarrierByRegion: *const fn (barriers: bitfield) callconv(APIENTRY) void,
-   GetTextureSubImage: *const fn (texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", type: @"enum", bufSize: sizei, pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   GetTextureSubImage: *const fn (texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, format: @"enum", @"type": @"enum", bufSize: sizei, pixels: ?*const anyopaque) callconv(APIENTRY) void,
    GetCompressedTextureSubImage: *const fn (texture: uint, level: int, xoffset: int, yoffset: int, zoffset: int, width: sizei, height: sizei, depth: sizei, bufSize: sizei, pixels: ?*const anyopaque) callconv(APIENTRY) void,
    GetGraphicsResetStatus: *const fn () callconv(APIENTRY) @"enum",
    GetnCompressedTexImage: *const fn (target: @"enum", lod: int, bufSize: sizei, pixels: ?*const anyopaque) callconv(APIENTRY) void,
-   GetnTexImage: *const fn (target: @"enum", level: int, format: @"enum", type: @"enum", bufSize: sizei, pixels: ?*const anyopaque) callconv(APIENTRY) void,
+   GetnTexImage: *const fn (target: @"enum", level: int, format: @"enum", @"type": @"enum", bufSize: sizei, pixels: ?*const anyopaque) callconv(APIENTRY) void,
    GetnUniformdv: *const fn (program: uint, location: int, bufSize: sizei, params: double) callconv(APIENTRY) void,
    GetnUniformfv: *const fn (program: uint, location: int, bufSize: sizei, params: float) callconv(APIENTRY) void,
    GetnUniformiv: *const fn (program: uint, location: int, bufSize: sizei, params: int) callconv(APIENTRY) void,
    GetnUniformuiv: *const fn (program: uint, location: int, bufSize: sizei, params: uint) callconv(APIENTRY) void,
-   ReadnPixels: *const fn (x: int, y: int, width: sizei, height: sizei, format: @"enum", type: @"enum", bufSize: sizei, data: ?*const anyopaque) callconv(APIENTRY) void,
+   ReadnPixels: *const fn (x: int, y: int, width: sizei, height: sizei, format: @"enum", @"type": @"enum", bufSize: sizei, data: ?*const anyopaque) callconv(APIENTRY) void,
    TextureBarrier: *const fn () callconv(APIENTRY) void,
    SpecializeShader: *const fn (shader: uint, pEntryPoint: char, numSpecializationConstants: uint, pConstantIndex: uint, pConstantValue: uint) callconv(APIENTRY) void,
    MultiDrawArraysIndirectCount: *const fn (mode: @"enum", indirect: ?*const anyopaque, drawcount: intptr, maxdrawcount: sizei, stride: sizei) callconv(APIENTRY) void,
-   MultiDrawElementsIndirectCount: *const fn (mode: @"enum", type: @"enum", indirect: ?*const anyopaque, drawcount: intptr, maxdrawcount: sizei, stride: sizei) callconv(APIENTRY) void,
+   MultiDrawElementsIndirectCount: *const fn (mode: @"enum", @"type": @"enum", indirect: ?*const anyopaque, drawcount: intptr, maxdrawcount: sizei, stride: sizei) callconv(APIENTRY) void,
    PolygonOffsetClamp: *const fn (factor: float, units: float, clamp: float) callconv(APIENTRY) void,
    pub fn init(procs: *FuncTable, loader: anytype) bool {
       @setEvalBranchQuota(1_000_000);
