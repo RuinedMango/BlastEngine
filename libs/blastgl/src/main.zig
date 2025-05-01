@@ -4,7 +4,7 @@ const std = @import("std");
 const api = "gl";
 const version_major = 4;
 const version_minor = 6;
-const profile = "core";
+const profile = "compatibility";
 
 const function = struct { name: []const u8, paramnames: [][]const u8, paramtypes: [][]const u8, returntype: []const u8 };
 
@@ -32,7 +32,7 @@ pub fn main() !void {
     try printconstants(root, out, alloc);
     try printfunctions(root, out, alloc);
 
-    std.debug.print("{s}", .{try in.readToEndAlloc(alloc, 999999999)});
+    std.debug.print("{s}", .{try in.readToEndAlloc(alloc, filestat.size)});
 }
 
 fn printconstants(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator) !void {
@@ -163,7 +163,7 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                                     name = "_sync";
                                                 }
                                                 if (param.findChildByTag("ptype") != null) {
-                                                    try paramtypes.append(typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]));
+                                                    try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{typemodswitch(param, param.children[0].char_data, param.children[2].char_data),typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..])}) );
                                                 } else {
                                                     try paramtypes.append("?*const anyopaque");
                                                 }
@@ -201,7 +201,7 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                             }
                                             try paramnames.append(name);
                                             if (param.findChildByTag("ptype") != null) {
-                                                try paramtypes.append(typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]));
+                                                try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{typemodswitch(param, param.children[0].char_data, param.children[2].char_data),typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..])}) );
                                             } else {
                                                 try paramtypes.append("?*const anyopaque");
                                             }
@@ -245,8 +245,7 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                                         }
                                                         try paramnames.append(name);
                                                         if (param.findChildByTag("ptype") != null) {
-                                                            const gltype = typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]);
-                                                            try paramtypes.append(gltype);
+                                                            try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{typemodswitch(param, param.children[0].char_data, param.children[2].char_data),typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..])}) );
                                                         } else {
                                                             try paramtypes.append("?*const anyopaque");
                                                         }
@@ -297,10 +296,7 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                                         name = "_sync";
                                                     }
                                                     if (param.findChildByTag("ptype") != null) {
-                                                        const gltype = typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]);
-                                                        std.debug.print("{s}", .{param.children[0].char_data});
-                                                        if (std.mem.eql(u8, param.children[0].char_data, "*")) {}
-                                                        try paramtypes.append(gltype);
+                                                        try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{typemodswitch(param, param.children[0].char_data, param.children[2].char_data),typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..])}) );
                                                     } else {
                                                         try paramtypes.append("?*const anyopaque");
                                                     }
@@ -411,6 +407,27 @@ fn typeswitch(intype: []const u8) []const u8 {
         return "@\"enum\"";
     }
     return intype;
+}
+
+fn typemodswitch(part: *xml.Element, mod1: ?[]const u8, mod2: ?[]const u8) []const u8 {
+    var isbuffer: bool = false;
+    if(part.getAttribute("class") != null){
+        isbuffer = std.mem.eql(u8, "buffer", part.getAttribute("class").?);
+    }
+    if(std.mem.eql(u8, "const ", mod1.?) and std.mem.eql(u8, " *const*", mod2.?)){
+        return "[*c]const [*c]const ";
+    }else if(std.mem.eql(u8, "const ", mod1.?) and std.mem.eql(u8, " *", mod2.?) and isbuffer){
+        return "[*]";
+    }else if(std.mem.eql(u8, "const ", mod1.?) and std.mem.eql(u8, " *", mod2.?) and !isbuffer){
+        return "[*c]const ";
+    }else if(std.mem.eql(u8, " *", mod2.?) and !std.mem.eql(u8, "const ", mod1.?)){
+        return "[*c]";
+    }else if(part.getAttribute("len") != null){
+        if(std.mem.eql(u8, "COMPSIZE(buffer)", part.getAttribute("len").?)){
+            return "[*]const ";
+        }
+    }
+    return "";
 }
 
 fn deduplicateConstants(array: []constant, alloc: std.mem.Allocator) ![]constant {
