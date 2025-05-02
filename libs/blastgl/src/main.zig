@@ -1,10 +1,10 @@
 const xml = @import("xml.zig");
 const std = @import("std");
 
-const api = "gl";
-const version_major = 4;
-const version_minor = 6;
-const profile = "compatibility";
+var api: []u8 = undefined;
+var version_major: u8 = 4;
+var version_minor: u8 = 6;
+var profile: []u8 = undefined;
 
 const function = struct { name: []const u8, paramnames: [][]const u8, paramtypes: [][]const u8, returntype: []const u8 };
 
@@ -28,11 +28,27 @@ pub fn main() !void {
     defer doc.deinit();
     const root = doc.root;
 
+    var args = try std.process.ArgIterator.initWithAllocator(alloc);
+    defer args.deinit();
+    _ = args.skip();
+    parseargs(&args);
+
     try printextra(out, alloc);
     try printconstants(root, out, alloc);
     try printfunctions(root, out, alloc);
 
     std.debug.print("{s}", .{try in.readToEndAlloc(alloc, filestat.size)});
+}
+
+fn parseargs(args: *std.process.ArgIterator) void{
+    while(args.next()) |arg|{
+        if(std.mem.eql(u8, arg, "--api") or std.mem.eql(u8, arg, "-a")){
+            api = @constCast(args.next().?);
+        }else if(std.mem.eql(u8, arg, "--profile")){
+            profile = @constCast(args.next().?);
+        }
+
+    }
 }
 
 fn printconstants(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator) !void {

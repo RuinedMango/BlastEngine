@@ -5,7 +5,7 @@ pub const info = struct {
   pub const api = .gl;
   pub const version_major = 4;
   pub const version_minor = 6;
-  pub const profile = .compatibility;
+  pub const profile = .;
 };
 
 pub fn makeFuncTableCurrent(procs: ?*const FuncTable) void {{
@@ -1777,7 +1777,6 @@ pub const VERTEX_BINDING_STRIDE = 0x82D8;
 pub const MAX_VERTEX_ATTRIB_RELATIVE_OFFSET = 0x82D9;
 pub const MAX_VERTEX_ATTRIB_BINDINGS = 0x82DA;
 pub const VERTEX_BINDING_BUFFER = 0x8F4F;
-pub const DISPLAY_LIST = 0x82E7;
 pub const MAX_VERTEX_ATTRIB_STRIDE = 0x82E5;
 pub const PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED = 0x8221;
 pub const TEXTURE_BUFFER_BINDING = 0x8C2A;
@@ -1816,18 +1815,6 @@ pub const RESET_NOTIFICATION_STRATEGY = 0x8256;
 pub const LOSE_CONTEXT_ON_RESET = 0x8252;
 pub const NO_RESET_NOTIFICATION = 0x8261;
 pub const CONTEXT_FLAG_ROBUST_ACCESS_BIT = 0x00000004;
-pub const COLOR_TABLE = 0x80D0;
-pub const POST_CONVOLUTION_COLOR_TABLE = 0x80D1;
-pub const POST_COLOR_MATRIX_COLOR_TABLE = 0x80D2;
-pub const PROXY_COLOR_TABLE = 0x80D3;
-pub const PROXY_POST_CONVOLUTION_COLOR_TABLE = 0x80D4;
-pub const PROXY_POST_COLOR_MATRIX_COLOR_TABLE = 0x80D5;
-pub const CONVOLUTION_1D = 0x8010;
-pub const CONVOLUTION_2D = 0x8011;
-pub const SEPARABLE_2D = 0x8012;
-pub const HISTOGRAM = 0x8024;
-pub const PROXY_HISTOGRAM = 0x8025;
-pub const MINMAX = 0x802E;
 pub const SHADER_BINARY_FORMAT_SPIR_V = 0x9551;
 pub const SPIR_V_BINARY = 0x9552;
 pub const PARAMETER_BUFFER = 0x80EE;
@@ -3935,96 +3922,6 @@ pub fn VertexAttribP4ui(index: uint, @"type": @"enum", normalized: boolean, valu
 pub fn VertexAttribP4uiv(index: uint, @"type": @"enum", normalized: boolean, value: [*c]const uint) void {
    return FuncTable.current.?.VertexAttribP4uiv(index, @"type", normalized, value);
 }
-pub fn VertexP2ui() void {
-   return FuncTable.current.?.VertexP2ui();
-}
-pub fn VertexP2uiv() void {
-   return FuncTable.current.?.VertexP2uiv();
-}
-pub fn VertexP3ui() void {
-   return FuncTable.current.?.VertexP3ui();
-}
-pub fn VertexP3uiv() void {
-   return FuncTable.current.?.VertexP3uiv();
-}
-pub fn VertexP4ui() void {
-   return FuncTable.current.?.VertexP4ui();
-}
-pub fn VertexP4uiv() void {
-   return FuncTable.current.?.VertexP4uiv();
-}
-pub fn TexCoordP1ui() void {
-   return FuncTable.current.?.TexCoordP1ui();
-}
-pub fn TexCoordP1uiv() void {
-   return FuncTable.current.?.TexCoordP1uiv();
-}
-pub fn TexCoordP2ui() void {
-   return FuncTable.current.?.TexCoordP2ui();
-}
-pub fn TexCoordP2uiv() void {
-   return FuncTable.current.?.TexCoordP2uiv();
-}
-pub fn TexCoordP3ui() void {
-   return FuncTable.current.?.TexCoordP3ui();
-}
-pub fn TexCoordP3uiv() void {
-   return FuncTable.current.?.TexCoordP3uiv();
-}
-pub fn TexCoordP4ui() void {
-   return FuncTable.current.?.TexCoordP4ui();
-}
-pub fn TexCoordP4uiv() void {
-   return FuncTable.current.?.TexCoordP4uiv();
-}
-pub fn MultiTexCoordP1ui() void {
-   return FuncTable.current.?.MultiTexCoordP1ui();
-}
-pub fn MultiTexCoordP1uiv() void {
-   return FuncTable.current.?.MultiTexCoordP1uiv();
-}
-pub fn MultiTexCoordP2ui() void {
-   return FuncTable.current.?.MultiTexCoordP2ui();
-}
-pub fn MultiTexCoordP2uiv() void {
-   return FuncTable.current.?.MultiTexCoordP2uiv();
-}
-pub fn MultiTexCoordP3ui() void {
-   return FuncTable.current.?.MultiTexCoordP3ui();
-}
-pub fn MultiTexCoordP3uiv() void {
-   return FuncTable.current.?.MultiTexCoordP3uiv();
-}
-pub fn MultiTexCoordP4ui() void {
-   return FuncTable.current.?.MultiTexCoordP4ui();
-}
-pub fn MultiTexCoordP4uiv() void {
-   return FuncTable.current.?.MultiTexCoordP4uiv();
-}
-pub fn NormalP3ui() void {
-   return FuncTable.current.?.NormalP3ui();
-}
-pub fn NormalP3uiv() void {
-   return FuncTable.current.?.NormalP3uiv();
-}
-pub fn ColorP3ui() void {
-   return FuncTable.current.?.ColorP3ui();
-}
-pub fn ColorP3uiv() void {
-   return FuncTable.current.?.ColorP3uiv();
-}
-pub fn ColorP4ui() void {
-   return FuncTable.current.?.ColorP4ui();
-}
-pub fn ColorP4uiv() void {
-   return FuncTable.current.?.ColorP4uiv();
-}
-pub fn SecondaryColorP3ui() void {
-   return FuncTable.current.?.SecondaryColorP3ui();
-}
-pub fn SecondaryColorP3uiv() void {
-   return FuncTable.current.?.SecondaryColorP3uiv();
-}
 pub fn MinSampleShading(value: float) void {
    return FuncTable.current.?.MinSampleShading(value);
 }
@@ -4943,42 +4840,6 @@ pub fn GetnUniformuiv(program: uint, location: int, bufSize: sizei, params: uint
 pub fn ReadnPixels(x: int, y: int, width: sizei, height: sizei, format: @"enum", @"type": @"enum", bufSize: sizei, data: ?*const anyopaque) void {
    return FuncTable.current.?.ReadnPixels(x, y, width, height, format, @"type", bufSize, data);
 }
-pub fn GetnMapdv() void {
-   return FuncTable.current.?.GetnMapdv();
-}
-pub fn GetnMapfv() void {
-   return FuncTable.current.?.GetnMapfv();
-}
-pub fn GetnMapiv() void {
-   return FuncTable.current.?.GetnMapiv();
-}
-pub fn GetnPixelMapfv() void {
-   return FuncTable.current.?.GetnPixelMapfv();
-}
-pub fn GetnPixelMapuiv() void {
-   return FuncTable.current.?.GetnPixelMapuiv();
-}
-pub fn GetnPixelMapusv() void {
-   return FuncTable.current.?.GetnPixelMapusv();
-}
-pub fn GetnPolygonStipple() void {
-   return FuncTable.current.?.GetnPolygonStipple();
-}
-pub fn GetnColorTable() void {
-   return FuncTable.current.?.GetnColorTable();
-}
-pub fn GetnConvolutionFilter() void {
-   return FuncTable.current.?.GetnConvolutionFilter();
-}
-pub fn GetnSeparableFilter() void {
-   return FuncTable.current.?.GetnSeparableFilter();
-}
-pub fn GetnHistogram() void {
-   return FuncTable.current.?.GetnHistogram();
-}
-pub fn GetnMinmax() void {
-   return FuncTable.current.?.GetnMinmax();
-}
 pub fn TextureBarrier() void {
    return FuncTable.current.?.TextureBarrier();
 }
@@ -5691,36 +5552,6 @@ pub const FuncTable = struct {
    VertexAttribP3uiv: *const fn (index: uint, @"type": @"enum", normalized: boolean, value: [*c]const uint) callconv(APIENTRY) void,
    VertexAttribP4ui: *const fn (index: uint, @"type": @"enum", normalized: boolean, value: uint) callconv(APIENTRY) void,
    VertexAttribP4uiv: *const fn (index: uint, @"type": @"enum", normalized: boolean, value: [*c]const uint) callconv(APIENTRY) void,
-   VertexP2ui: *const fn () callconv(APIENTRY) void,
-   VertexP2uiv: *const fn () callconv(APIENTRY) void,
-   VertexP3ui: *const fn () callconv(APIENTRY) void,
-   VertexP3uiv: *const fn () callconv(APIENTRY) void,
-   VertexP4ui: *const fn () callconv(APIENTRY) void,
-   VertexP4uiv: *const fn () callconv(APIENTRY) void,
-   TexCoordP1ui: *const fn () callconv(APIENTRY) void,
-   TexCoordP1uiv: *const fn () callconv(APIENTRY) void,
-   TexCoordP2ui: *const fn () callconv(APIENTRY) void,
-   TexCoordP2uiv: *const fn () callconv(APIENTRY) void,
-   TexCoordP3ui: *const fn () callconv(APIENTRY) void,
-   TexCoordP3uiv: *const fn () callconv(APIENTRY) void,
-   TexCoordP4ui: *const fn () callconv(APIENTRY) void,
-   TexCoordP4uiv: *const fn () callconv(APIENTRY) void,
-   MultiTexCoordP1ui: *const fn () callconv(APIENTRY) void,
-   MultiTexCoordP1uiv: *const fn () callconv(APIENTRY) void,
-   MultiTexCoordP2ui: *const fn () callconv(APIENTRY) void,
-   MultiTexCoordP2uiv: *const fn () callconv(APIENTRY) void,
-   MultiTexCoordP3ui: *const fn () callconv(APIENTRY) void,
-   MultiTexCoordP3uiv: *const fn () callconv(APIENTRY) void,
-   MultiTexCoordP4ui: *const fn () callconv(APIENTRY) void,
-   MultiTexCoordP4uiv: *const fn () callconv(APIENTRY) void,
-   NormalP3ui: *const fn () callconv(APIENTRY) void,
-   NormalP3uiv: *const fn () callconv(APIENTRY) void,
-   ColorP3ui: *const fn () callconv(APIENTRY) void,
-   ColorP3uiv: *const fn () callconv(APIENTRY) void,
-   ColorP4ui: *const fn () callconv(APIENTRY) void,
-   ColorP4uiv: *const fn () callconv(APIENTRY) void,
-   SecondaryColorP3ui: *const fn () callconv(APIENTRY) void,
-   SecondaryColorP3uiv: *const fn () callconv(APIENTRY) void,
    MinSampleShading: *const fn (value: float) callconv(APIENTRY) void,
    BlendEquationi: *const fn (buf: uint, mode: @"enum") callconv(APIENTRY) void,
    BlendEquationSeparatei: *const fn (buf: uint, modeRGB: @"enum", modeAlpha: @"enum") callconv(APIENTRY) void,
@@ -6027,18 +5858,6 @@ pub const FuncTable = struct {
    GetnUniformiv: *const fn (program: uint, location: int, bufSize: sizei, params: int) callconv(APIENTRY) void,
    GetnUniformuiv: *const fn (program: uint, location: int, bufSize: sizei, params: uint) callconv(APIENTRY) void,
    ReadnPixels: *const fn (x: int, y: int, width: sizei, height: sizei, format: @"enum", @"type": @"enum", bufSize: sizei, data: ?*const anyopaque) callconv(APIENTRY) void,
-   GetnMapdv: *const fn () callconv(APIENTRY) void,
-   GetnMapfv: *const fn () callconv(APIENTRY) void,
-   GetnMapiv: *const fn () callconv(APIENTRY) void,
-   GetnPixelMapfv: *const fn () callconv(APIENTRY) void,
-   GetnPixelMapuiv: *const fn () callconv(APIENTRY) void,
-   GetnPixelMapusv: *const fn () callconv(APIENTRY) void,
-   GetnPolygonStipple: *const fn () callconv(APIENTRY) void,
-   GetnColorTable: *const fn () callconv(APIENTRY) void,
-   GetnConvolutionFilter: *const fn () callconv(APIENTRY) void,
-   GetnSeparableFilter: *const fn () callconv(APIENTRY) void,
-   GetnHistogram: *const fn () callconv(APIENTRY) void,
-   GetnMinmax: *const fn () callconv(APIENTRY) void,
    TextureBarrier: *const fn () callconv(APIENTRY) void,
    SpecializeShader: *const fn (shader: uint, pEntryPoint: [*c]const char, numSpecializationConstants: uint, pConstantIndex: [*c]const uint, pConstantValue: [*c]const uint) callconv(APIENTRY) void,
    MultiDrawArraysIndirectCount: *const fn (mode: @"enum", indirect: ?*const anyopaque, drawcount: intptr, maxdrawcount: sizei, stride: sizei) callconv(APIENTRY) void,

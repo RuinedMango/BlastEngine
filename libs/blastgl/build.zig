@@ -2,7 +2,7 @@ const std = @import("std");
 
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
-    const optimize = b.standardOptimizeOption(.{});
+    const optimize = .ReleaseFast;
 
     const exe = b.addExecutable(.{
         .name = "blastgl",
@@ -11,11 +11,12 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    b.installArtifact(exe);
-
     const run_cmd = b.addRunArtifact(exe);
 
-    run_cmd.step.dependOn(b.getInstallStep());
+    run_cmd.addArgs(&.{"-a", "gl", "-p", "compatibility"});
+
+    b.getInstallStep().dependOn(&run_cmd.step);
+    b.getInstallStep().dependOn(&b.addInstallFile(b.path("gl.zig"), "gl.zig").step);
 
     if (b.args) |args| {
         run_cmd.addArgs(args);
