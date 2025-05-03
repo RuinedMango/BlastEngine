@@ -5,6 +5,7 @@ var api: []u8 = undefined;
 var version_major: u8 = 4;
 var version_minor: u8 = 6;
 var profile: []u8 = undefined;
+var outpath: []u8 = undefined;
 
 const function = struct { name: []const u8, paramnames: [][]const u8, paramtypes: [][]const u8, returntype: []const u8 };
 
@@ -14,6 +15,11 @@ pub fn main() !void {
     var allocrena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer allocrena.deinit();
     const alloc = allocrena.allocator();
+
+    var args = try std.process.ArgIterator.initWithAllocator(alloc);
+    defer args.deinit();
+    _ = args.skip();
+    try parseargs(&args);
 
     //in registry
     const in = try std.fs.cwd().openFile("gl.xml", .{ .mode = std.fs.File.OpenMode.read_only });
@@ -26,12 +32,7 @@ pub fn main() !void {
     const filestat = try in.stat();
     const doc = try xml.parse(alloc, try in.readToEndAlloc(alloc, filestat.size));
     defer doc.deinit();
-    const root = doc.root;
-
-    var args = try std.process.ArgIterator.initWithAllocator(alloc);
-    defer args.deinit();
-    _ = args.skip();
-    parseargs(&args);
+    const root = doc.root; 
 
     try printextra(out, alloc);
     try printconstants(root, out, alloc);
@@ -40,14 +41,19 @@ pub fn main() !void {
     std.debug.print("{s}", .{try in.readToEndAlloc(alloc, filestat.size)});
 }
 
-fn parseargs(args: *std.process.ArgIterator) void{
-    while(args.next()) |arg|{
-        if(std.mem.eql(u8, arg, "--api") or std.mem.eql(u8, arg, "-a")){
+fn parseargs(args: *std.process.ArgIterator) !void {
+    while (args.next()) |arg| {
+        if (std.mem.eql(u8, arg, "--api") or std.mem.eql(u8, arg, "-a")) {
             api = @constCast(args.next().?);
-        }else if(std.mem.eql(u8, arg, "--profile")){
+        } else if (std.mem.eql(u8, arg, "--profile") or std.mem.eql(u8, arg, "-p")) {
             profile = @constCast(args.next().?);
+        } else if (std.mem.eql(u8, arg, "--minorver") or std.mem.eql(u8, arg, "-iv")) {
+            version_minor = try std.fmt.parseInt(u8, args.next().?, 10);
+        } else if (std.mem.eql(u8, arg, "--majorver") or std.mem.eql(u8, arg, "-av")) {
+            version_major = try std.fmt.parseInt(u8, args.next().?, 10);
+        } else if (std.mem.eql(u8, arg, "--out") or std.mem.eql(u8, arg, "-o")) {
+            outpath = @constCast(args.next().?);
         }
-
     }
 }
 
@@ -179,7 +185,7 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                                     name = "_sync";
                                                 }
                                                 if (param.findChildByTag("ptype") != null) {
-                                                    try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{typemodswitch(param, param.children[0].char_data, param.children[2].char_data),typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..])}) );
+                                                    try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{ typemodswitch(param, param.children[0].char_data, param.children[2].char_data), typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]) }));
                                                 } else {
                                                     try paramtypes.append("?*const anyopaque");
                                                 }
@@ -217,7 +223,7 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                             }
                                             try paramnames.append(name);
                                             if (param.findChildByTag("ptype") != null) {
-                                                try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{typemodswitch(param, param.children[0].char_data, param.children[2].char_data),typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..])}) );
+                                                try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{ typemodswitch(param, param.children[0].char_data, param.children[2].char_data), typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]) }));
                                             } else {
                                                 try paramtypes.append("?*const anyopaque");
                                             }
@@ -261,7 +267,7 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                                         }
                                                         try paramnames.append(name);
                                                         if (param.findChildByTag("ptype") != null) {
-                                                            try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{typemodswitch(param, param.children[0].char_data, param.children[2].char_data),typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..])}) );
+                                                            try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{ typemodswitch(param, param.children[0].char_data, param.children[2].char_data), typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]) }));
                                                         } else {
                                                             try paramtypes.append("?*const anyopaque");
                                                         }
@@ -312,7 +318,7 @@ fn printfunctions(root: *xml.Element, out: std.fs.File, alloc: std.mem.Allocator
                                                         name = "_sync";
                                                     }
                                                     if (param.findChildByTag("ptype") != null) {
-                                                        try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{typemodswitch(param, param.children[0].char_data, param.children[2].char_data),typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..])}) );
+                                                        try paramtypes.append(try std.fmt.allocPrint(alloc, "{s}{s}", .{ typemodswitch(param, param.children[0].char_data, param.children[2].char_data), typeswitch(param.findChildByTag("ptype").?.children[0].char_data[2..]) }));
                                                     } else {
                                                         try paramtypes.append("?*const anyopaque");
                                                     }
@@ -427,19 +433,19 @@ fn typeswitch(intype: []const u8) []const u8 {
 
 fn typemodswitch(part: *xml.Element, mod1: ?[]const u8, mod2: ?[]const u8) []const u8 {
     var isbuffer: bool = false;
-    if(part.getAttribute("class") != null){
+    if (part.getAttribute("class") != null) {
         isbuffer = std.mem.eql(u8, "buffer", part.getAttribute("class").?);
     }
-    if(std.mem.eql(u8, "const ", mod1.?) and std.mem.eql(u8, " *const*", mod2.?)){
+    if (std.mem.eql(u8, "const ", mod1.?) and std.mem.eql(u8, " *const*", mod2.?)) {
         return "[*c]const [*c]const ";
-    }else if(std.mem.eql(u8, "const ", mod1.?) and std.mem.eql(u8, " *", mod2.?) and isbuffer){
+    } else if (std.mem.eql(u8, "const ", mod1.?) and std.mem.eql(u8, " *", mod2.?) and isbuffer) {
         return "[*]";
-    }else if(std.mem.eql(u8, "const ", mod1.?) and std.mem.eql(u8, " *", mod2.?) and !isbuffer){
+    } else if (std.mem.eql(u8, "const ", mod1.?) and std.mem.eql(u8, " *", mod2.?) and !isbuffer) {
         return "[*c]const ";
-    }else if(std.mem.eql(u8, " *", mod2.?) and !std.mem.eql(u8, "const ", mod1.?)){
+    } else if (std.mem.eql(u8, " *", mod2.?) and !std.mem.eql(u8, "const ", mod1.?)) {
         return "[*c]";
-    }else if(part.getAttribute("len") != null){
-        if(std.mem.eql(u8, "COMPSIZE(buffer)", part.getAttribute("len").?)){
+    } else if (part.getAttribute("len") != null) {
+        if (std.mem.eql(u8, "COMPSIZE(buffer)", part.getAttribute("len").?)) {
             return "[*]const ";
         }
     }
