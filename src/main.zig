@@ -1,12 +1,9 @@
 const std = @import("std");
-const tracy = @import("blasttracy");
 const glfw = @import("blastglfw");
 
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
-    const tracy_zone = tracy.ZoneN(@src(), "Ballin");
-    defer tracy_zone.End();
     try glfw.init();
     defer glfw.terminate();
 

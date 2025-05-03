@@ -1,11 +1,13 @@
 .{
-    .name = "BlastEngine",
+    .name = .BlastEngine,
+    .fingerprint = 0x15ebc885401d4f7,
     .version = "0.0.0",
 
     .dependencies = .{
-        .blasttracy = .{ .path = "libs/blasttracy" },
+        //.blasttracy = .{ .path = "libs/blasttracy" },
         .blastglfw = .{ .path = "libs/blastglfw" },
-        .blastjni = .{ .path = "libs/blastjni" },
+        .blastgl = .{ .path = "libs/blastgl" },
+        //.blastjni = .{ .path = "libs/blastjni" },
         .system_sdk = .{ .path = "libs/system-sdk" },
     },
     .paths = .{
