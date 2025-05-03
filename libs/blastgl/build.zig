@@ -43,7 +43,6 @@ pub fn build(b: *std.Build) void {
 pub fn createOpenglModule(b: *std.Build, api: []const u8, profile: []const u8, majorver: u8, minorver: u8 ) !*std.Build.Module{
     const blastgl_dep = b.dependencyFromBuildZig(@This(), .{
         .target = b.graph.host,
-        .optimize = std.builtin.OptimizeMode.Debug,
     });
     const blastgl_exe = blastgl_dep.artifact("blastgl");
     const run_blastgl = b.addRunArtifact(blastgl_exe);

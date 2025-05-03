@@ -26,7 +26,7 @@ pub fn main() !void {
     defer in.close();
 
     //out zig file
-    const out = try std.fs.cwd().createFile("gl.zig", .{});
+    const out = std.io.getStdOut().writer().context;
     defer out.close();
 
     const filestat = try in.stat();
@@ -505,10 +505,10 @@ const funcTableFunctions =
     \\   pub fn init(procs: *FuncTable, loader: anytype) bool {
     \\      @setEvalBranchQuota(1_000_000);
     \\      var success: u1 = 1;
-    \\      inline for (@typeInfo(FuncTable).Struct.fields) |field_info| {
+    \\      inline for (@typeInfo(FuncTable).@"struct".fields) |field_info| {
     \\          switch (@typeInfo(field_info.type)) {
-    \\              .Pointer => |ptr_info| switch (@typeInfo(ptr_info.child)) {
-    \\                  .Fn => {
+    \\              .pointer => |ptr_info| switch (@typeInfo(ptr_info.child)) {
+    \\                  .@"fn" => {
     \\                      success &= @intFromBool(procs.initCommand(loader, field_info.name));
     \\                  },
     \\                  else => comptime unreachable,
@@ -524,19 +524,19 @@ const funcTableFunctions =
     \\          @field(procs, name) = @ptrCast(proc);
     \\          return true;
     \\      } else {
-    \\          return @typeInfo(@TypeOf(@field(procs, name))) == .Optional;
+    \\          return @typeInfo(@TypeOf(@field(procs, name))) == .optional;
     \\      }
     \\   }
     \\
     \\   fn getProcAddress(loader: anytype, prefixed_name: [:0]const u8) ?PROC {
     \\      const loader_info = @typeInfo(@TypeOf(loader));
     \\      const loader_is_fn =
-    \\          loader_info == .Fn or
-    \\          loader_info == .Pointer and @typeInfo(loader_info.Pointer.child) == .Fn;
+    \\          loader_info == .@"fn" or
+    \\          loader_info == .pointer and @typeInfo(loader_info.pointer.child) == .@"fn";
     \\      if (loader_is_fn) {
-    \\          return @as(?PROC, loader(@as([*:0]const u8, prefixed_name)));
+    \\          return @as(?PROC, loader(@as([:0]const u8, prefixed_name)));
     \\      } else {
-    \\          return @as(?PROC, loader.getProcAddress(@as([*:0]const u8, prefixed_name)));
+    \\          return @as(?PROC, loader.getProcAddress(@as([:0]const u8, prefixed_name)));
     \\      }
     \\   }
 ;

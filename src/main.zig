@@ -1,5 +1,8 @@
 const std = @import("std");
 const glfw = @import("blastglfw");
+const gl = @import("blastgl");
+
+var funcs: gl.FuncTable = undefined;
 
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
@@ -11,11 +14,19 @@ pub fn main() !void {
     defer window.destroy();
 
     glfw.makeContextCurrent(window);
+    if(!funcs.init(glfw.getProcAddress)) return error.NotInitialized;
+
+    gl.makeFuncTableCurrent(&funcs);
+    
+    const alpha: gl.float = 1;
+    gl.ClearColor(1, 1, 1, alpha);
 
     glfw.swapInterval(1);
 
     while (!window.shouldClose()) {
         glfw.pollEvents();
+
+        gl.Clear(gl.COLOR_BUFFER_BIT);
 
         window.swapBuffers();
     }
