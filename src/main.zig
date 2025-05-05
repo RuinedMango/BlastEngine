@@ -4,22 +4,90 @@ const gl = @import("blastgl");
 
 var funcs: gl.FuncTable = undefined;
 
+const vertices = [_]f32{
+    -0.5, -0.5, 0.0,
+    0.5, -0.5, 0.0,
+    0.0, 0.5, 0.0,
+};
+
+const indices = [_]gl.uint{
+    0, 1, 3,
+    1, 2, 3,
+};
+
+const vertexShaderSource =
+    \\#version 460
+    \\layout (location = 0) in vec3 aPos;
+    \\void main() {
+    \\  gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    \\}
+;
+
+const fragmentShaderSource =
+    \\#version 460
+    \\out vec4 FragColor;
+    \\void main() {
+    \\  FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+    \\}
+;
+
+var VBO: gl.uint = undefined;
+var VAO: gl.uint = undefined;
+var EBO: gl.uint = undefined;
+
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
+
     try glfw.init();
     defer glfw.terminate();
+    glfw.windowHint(glfw.WindowHint.context_version_major, 4);
+    glfw.windowHint(glfw.WindowHint.context_version_minor, 6);
+    glfw.windowHintTyped(glfw.WindowHint.opengl_profile, glfw.OpenGLProfile.opengl_core_profile);
 
     const window = try glfw.Window.create(600, 600, "Cuck", null);
     defer window.destroy();
 
     glfw.makeContextCurrent(window);
     if(!funcs.init(glfw.getProcAddress)) return error.NotInitialized;
-
     gl.makeFuncTableCurrent(&funcs);
+
+    const vertexShader: gl.uint = gl.CreateShader(gl.VERTEX_SHADER);
+    gl.ShaderSource(vertexShader, 1, @ptrCast(&vertexShaderSource), &@intCast(vertexShaderSource.len));
+    gl.CompileShader(vertexShader);
+
+    const fragmentShader: gl.uint = gl.CreateShader(gl.FRAGMENT_SHADER);
+    gl.ShaderSource(fragmentShader, 1, @ptrCast(&fragmentShaderSource), &@intCast(fragmentShaderSource.len));
+    gl.CompileShader(fragmentShader);
+
+
+    const shaderProgram: gl.uint = gl.CreateProgram();
+    gl.AttachShader(shaderProgram, vertexShader);
+    gl.AttachShader(shaderProgram, fragmentShader);
+    gl.LinkProgram(shaderProgram);
+
+    gl.DeleteShader(vertexShader);
+    gl.DeleteShader(fragmentShader);
     
+    gl.GenVertexArrays(1, (&VAO)[0..1]);
+    gl.GenBuffers(1, (&VBO)[0..1]);
+    gl.GenBuffers(1, (&EBO)[0..1]);
+
+    gl.BindVertexArray(VAO);
+
+    gl.BindBuffer(gl.ARRAY_BUFFER, VBO);
+    gl.BufferData(gl.ARRAY_BUFFER, vertices.len, &vertices, gl.STATIC_DRAW);
+
+    gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, EBO);
+    gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, indices.len, &indices, gl.STATIC_DRAW);
+
+    gl.VertexAttribPointer(0, 3, gl.FLOAT, gl.FALSE, 3 * @sizeOf(gl.float), @ptrFromInt(0));
+    gl.EnableVertexAttribArray(0);
+
+    gl.BindVertexArray(0);
+
     const alpha: gl.float = 1;
-    gl.ClearColor(1, 1, 1, alpha);
+    gl.ClearColor(0.2, 0.3, 0.3, alpha);
 
     glfw.swapInterval(1);
 
@@ -27,6 +95,10 @@ pub fn main() !void {
         glfw.pollEvents();
 
         gl.Clear(gl.COLOR_BUFFER_BIT);
+
+        gl.UseProgram(shaderProgram);
+        gl.BindVertexArray(VBO);
+        gl.DrawElements(gl.TRIANGLES, 6, gl.UNSIGNED_INT, @ptrFromInt(0));
 
         window.swapBuffers();
     }
