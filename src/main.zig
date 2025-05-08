@@ -5,9 +5,10 @@ const gl = @import("blastgl");
 var funcs: gl.FuncTable = undefined;
 
 const vertices = [_]f32{
-    -0.5, -0.5, 0.0,
+    0.5, 0.5, 0.0,
     0.5, -0.5, 0.0,
-    0.0, 0.5, 0.0,
+    -0.5, -0.5, 0.0,
+    -0.5, 0.5, 0.0,
 };
 
 const indices = [_]gl.uint{
@@ -52,19 +53,39 @@ pub fn main() !void {
     if(!funcs.init(glfw.getProcAddress)) return error.NotInitialized;
     gl.makeFuncTableCurrent(&funcs);
 
+    var success: c_int = undefined;
+    var info_log_buf: [512:0]u8 = undefined;
+
     const vertexShader: gl.uint = gl.CreateShader(gl.VERTEX_SHADER);
-    gl.ShaderSource(vertexShader, 1, @ptrCast(&vertexShaderSource), &@intCast(vertexShaderSource.len));
+    gl.ShaderSource(vertexShader, 1, &.{vertexShaderSource}, &.{vertexShaderSource.len});
     gl.CompileShader(vertexShader);
+    gl.GetShaderiv(vertexShader, gl.COMPILE_STATUS, &success);
+    if(success == gl.FALSE){
+        gl.GetShaderInfoLog(vertexShader, info_log_buf.len, null, &info_log_buf);
+        std.debug.print("{s}", .{std.mem.sliceTo(&info_log_buf, 0)});
+        return error.InvalidValue;
+    }
 
     const fragmentShader: gl.uint = gl.CreateShader(gl.FRAGMENT_SHADER);
-    gl.ShaderSource(fragmentShader, 1, @ptrCast(&fragmentShaderSource), &@intCast(fragmentShaderSource.len));
+    gl.ShaderSource(fragmentShader, 1, &.{fragmentShaderSource}, &.{fragmentShaderSource.len});
     gl.CompileShader(fragmentShader);
-
+    gl.GetShaderiv(fragmentShader, gl.COMPILE_STATUS, &success);
+    if(success == gl.FALSE){
+        gl.GetShaderInfoLog(fragmentShader, info_log_buf.len, null, &info_log_buf);
+        std.debug.print("{s}", .{std.mem.sliceTo(&info_log_buf, 0)});
+        return error.InvalidValue;
+    }
 
     const shaderProgram: gl.uint = gl.CreateProgram();
     gl.AttachShader(shaderProgram, vertexShader);
     gl.AttachShader(shaderProgram, fragmentShader);
     gl.LinkProgram(shaderProgram);
+    gl.GetProgramiv(shaderProgram, gl.LINK_STATUS, &success);
+    if(success == gl.FALSE) {
+        gl.GetProgramInfoLog(shaderProgram, info_log_buf.len, null, &info_log_buf);
+        std.debug.print("{s}", .{std.mem.sliceTo(&info_log_buf, 0)});
+        return error.InvalidValue;
+    }
 
     gl.DeleteShader(vertexShader);
     gl.DeleteShader(fragmentShader);
@@ -76,13 +97,15 @@ pub fn main() !void {
     gl.BindVertexArray(VAO);
 
     gl.BindBuffer(gl.ARRAY_BUFFER, VBO);
-    gl.BufferData(gl.ARRAY_BUFFER, vertices.len, &vertices, gl.STATIC_DRAW);
+    gl.BufferData(gl.ARRAY_BUFFER, @sizeOf(@TypeOf(vertices)), &vertices, gl.STATIC_DRAW);
 
     gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, EBO);
-    gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, indices.len, &indices, gl.STATIC_DRAW);
+    gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, @sizeOf(@TypeOf(indices)), &indices, gl.STATIC_DRAW);
 
-    gl.VertexAttribPointer(0, 3, gl.FLOAT, gl.FALSE, 3 * @sizeOf(gl.float), @ptrFromInt(0));
+    gl.VertexAttribPointer(0, 3, gl.FLOAT, gl.FALSE, 3 * @sizeOf(gl.float), 0);
     gl.EnableVertexAttribArray(0);
+
+    gl.BindBuffer(gl.ARRAY_BUFFER, 0);
 
     gl.BindVertexArray(0);
 
@@ -97,8 +120,8 @@ pub fn main() !void {
         gl.Clear(gl.COLOR_BUFFER_BIT);
 
         gl.UseProgram(shaderProgram);
-        gl.BindVertexArray(VBO);
-        gl.DrawElements(gl.TRIANGLES, 6, gl.UNSIGNED_INT, @ptrFromInt(0));
+        gl.BindVertexArray(VAO);
+        gl.DrawElements(gl.TRIANGLES, 6, gl.UNSIGNED_INT, 0);
 
         window.swapBuffers();
     }

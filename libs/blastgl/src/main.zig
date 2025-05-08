@@ -514,7 +514,16 @@ pub fn paramOverride(func: []const u8, paramIndex: u8) ?[]const u8 {
         std.mem.eql(u8, func, "ShaderSourceARB"))
     {
         return switch (paramIndex) {
+            2 => "[*]const [*]const char",
             3 => "?[*]const int",
+            else => null,
+        };
+    }
+    if (std.mem.eql(u8, func, "GetProgramiv") or
+        std.mem.eql(u8, func, "GetShaderiv")) 
+    {
+        return switch (paramIndex) {
+            2 => "*int",
             else => null,
         };
     }
@@ -524,6 +533,18 @@ pub fn paramOverride(func: []const u8, paramIndex: u8) ?[]const u8 {
         return switch (paramIndex) {
             2 => "?*sizei",
             3 => "[*]char",
+            else => null,
+        };
+    }
+    if (std.mem.eql(u8, func, "DrawElements")) {
+        return switch (paramIndex) {
+            3 => "usize",
+            else => null,
+        };
+    }
+    if (std.mem.eql(u8, func, "VertexAttribPointer")) {
+        return switch (paramIndex) {
+            5 => "usize",
             else => null,
         };
     }
