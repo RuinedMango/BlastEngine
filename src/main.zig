@@ -28,7 +28,7 @@ const fragmentShaderSource =
     \\#version 460
     \\out vec4 FragColor;
     \\void main() {
-    \\  FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+    \\  FragColor = vec4(0.8f, 0.5f, 0.2f, 1.0f);
     \\}
 ;
 
@@ -46,7 +46,7 @@ pub fn main() !void {
     glfw.windowHint(glfw.WindowHint.context_version_minor, 6);
     glfw.windowHintTyped(glfw.WindowHint.opengl_profile, glfw.OpenGLProfile.opengl_core_profile);
 
-    const window = try glfw.Window.create(600, 600, "Cuck", null);
+    const window = try glfw.Window.create(600, 600, "Weener", null);
     defer window.destroy();
 
     glfw.makeContextCurrent(window);

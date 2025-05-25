@@ -40,7 +40,7 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&run_exe_unit_tests.step);
 }
 
-pub fn createOpenglModule(b: *std.Build, api: []const u8, profile: []const u8, majorver: u8, minorver: u8 ) !*std.Build.Module{
+pub fn createOpenglModule(b: *std.Build, api: []const u8, profile: []const u8, majorver: u8, minorver: u8, extensions: []const []const u8 ) !*std.Build.Module{
     const blastgl_dep = b.dependencyFromBuildZig(@This(), .{
         .target = b.graph.host,
     });
@@ -55,8 +55,15 @@ pub fn createOpenglModule(b: *std.Build, api: []const u8, profile: []const u8, m
         try std.fmt.allocPrint(b.allocator, "{}", .{majorver}),
         "-iv",
         try std.fmt.allocPrint(b.allocator, "{}", .{minorver}),
-
+        "-e",
     });
+
+    var extensionList = std.ArrayList(u8).init(b.allocator);
+    for(extensions) |extension|{
+        try extensionList.appendSlice(extension);
+        try extensionList.append(':');
+    }
+    run_blastgl.addArg(extensionList.items);
     
     const output = run_blastgl.captureStdOut();
     run_blastgl.captured_stdout.?.basename = "gl.zig";

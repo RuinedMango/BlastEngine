@@ -30,7 +30,7 @@ pub fn build(b: *std.Build) !void {
    // });
    // exe.root_module.addImport("blasttracy", blasttracy.module("root"));
    // exe.linkLibrary(blasttracy.artifact("tracy"));
-    exe.root_module.addImport("blastgl", try @import("blastgl").createOpenglModule(b, "gl", "core", 4, 6));
+    exe.root_module.addImport("blastgl", try @import("blastgl").createOpenglModule(b, "gl", "core", 4, 6, &.{""}));
 
     const blastglfw = b.dependency("blastglfw", .{
         .target = target,
