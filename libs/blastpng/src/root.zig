@@ -19,7 +19,7 @@ pub fn decodeFromMem(data: []u8, width: *u32, height: *u32, bitDepth: *u8, color
     }
 
     const IHDR = data[8..22];
-    width = @ptrCast(IHDR[0..4]);
+    width = std.mem.readInt(u32, IHDR[0..4], std.builtin.Endian.little);
     height.* = IHDR[4..9];
     bitDepth.* = IHDR[9..10];
     colorType.* = IHDR[11..12];
