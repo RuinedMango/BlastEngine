@@ -17,12 +17,23 @@ pub fn decodeFromMem(data: []u8, width: *u32, height: *u32, bitDepth: *u8, color
         std.debug.print("Invalid PNG", .{});
         return LoadPNGError.InvalidPNG;
     }
+    _ = width;
+    _ = height;
+    _ = bitDepth;
+    _ = colorType;
+    var pointer: u8 = 8;
+    var stillReading = true;
+    while(stillReading){
+        const length = std.mem.readInt(u32, @ptrCast(data[pointer..pointer+4]), std.builtin.Endian.big);
+        std.debug.print("{}\n", .{length}); 
+        pointer += 4;
+        const name = data[pointer..pointer+4];
+        std.debug.print("{s}\n", .{name});
+        pointer += 4;
+        const cdata = data[pointer..pointer+length];
 
-    const IHDR = data[8..22];
-    width = std.mem.readInt(u32, IHDR[0..4], std.builtin.Endian.little);
-    height.* = IHDR[4..9];
-    bitDepth.* = IHDR[9..10];
-    colorType.* = IHDR[11..12];
+        stillReading = false;
+    }
 
     return "";
 }
@@ -37,6 +48,8 @@ pub fn decodeFromReader(reader: std.io.AnyReader) ![]u8{
 
 test "Should work" {
     const data = try std.fs.cwd().readFileAlloc(testing.allocator, "Lenna_(test_image).png", 999999);
+    defer testing.allocator.free(data);
+
     var width: u32 = 0;
     var height: u32 = 0;
     var bitDepth: u8 = 0;
