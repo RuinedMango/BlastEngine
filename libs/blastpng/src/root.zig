@@ -9,19 +9,46 @@ const LoadPNGError = error{
     
 };
 
+const ChunkType = enum{
+    IHDR,
+    PLTE,
+    IDAT,
+    IEND,
+    bKGD,
+    cHRM,
+    cICP,
+    dSIG,
+    eXIf,
+    gAMA,
+    hIST,
+    iCCP,
+    iTXt,
+    pHYs,
+    sBIT,
+    sPLT,
+    sRGB,
+    sTER,
+    tEXt,
+    tIME,
+    tRNS,
+    zTXt,
+};
+
 var PNG_SIG = [_]u8{0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A};
 
-pub fn decodeFromMem(data: []u8, width: *u32, height: *u32, bitDepth: *u8, colorType: *u8) ![]u8{
+pub fn decodeFromMem(alloc: std.mem.Allocator, data: []u8, width: *u32, height: *u32, bitDepth: *u8, colorType: *u8) ![]u8{
+    const compressionMethod: u8 = 0;
+    const filterMethod: u8 = 0;
+    const interlaceMethod: u8 = 0;
+    
+    const decodedData: std.ArrayList(u8) = std.ArrayList(u8).init(alloc);
+
     const sig = data[0..8];
     if(!std.mem.eql(u8, sig, &PNG_SIG)){
         std.debug.print("Invalid PNG", .{});
         return LoadPNGError.InvalidPNG;
     }
-    _ = width;
-    _ = height;
-    _ = bitDepth;
-    _ = colorType;
-    var pointer: u8 = 8;
+    var pointer: u64 = 8;
     var stillReading = true;
     while(stillReading){
         const length = std.mem.readInt(u32, @ptrCast(data[pointer..pointer+4]), std.builtin.Endian.big);
@@ -31,11 +58,22 @@ pub fn decodeFromMem(data: []u8, width: *u32, height: *u32, bitDepth: *u8, color
         std.debug.print("{s}\n", .{name});
         pointer += 4;
         const cdata = data[pointer..pointer+length];
-
-        stillReading = false;
+        const ctype = std.meta.stringToEnum(ChunkType, name);
+        if(ctype != null){
+            try switch(ctype.?) {
+                .IHDR => handleIHDR(cdata, width, height, bitDepth, colorType, &compressionMethod, &filterMethod, &interlaceMethod),
+                .IDAT => handleIDAT(cdata, decodedData),
+                .IEND => stillReading = false,
+                else => std.debug.print("working on it\n", .{}),
+            };     
+        }else{
+            std.debug.print("Cannot handle {s}\n", .{name});
+        }
+        pointer += length;
+        //CRC offset;
+        pointer += 4;
     }
-
-    return "";
+    return decodedData.items;
 }
 
 pub fn decodeFromFile(fileName: []u8) ![]u8{
@@ -44,6 +82,20 @@ pub fn decodeFromFile(fileName: []u8) ![]u8{
 
 pub fn decodeFromReader(reader: std.io.AnyReader) ![]u8{
     _ = reader;
+}
+
+fn handleIHDR(data: []u8, width: *u32, height: *u32, bitDepth: *u8, colorType: *u8, compressionMethod: *u8, filterMethod: *u8, interlaceMethod: *u8) !void{
+    width.* = std.mem.readInt(u32, data[0..4], std.builtin.Endian.big);
+    height.* = std.mem.readInt(u32, data[4..8], std.builtin.Endian.big);
+    bitDepth.* = data[8];
+    colorType.* = data[9];
+    compressionMethod.* = data[10];
+    filterMethod.* = data[11];
+    interlaceMethod.* = data[12];
+}
+
+fn handleIDAT(data: []u8, out: std.ArrayList(u8)) void{
+
 }
 
 test "Should work" {
