@@ -94,12 +94,12 @@ fn handleIHDR(data: []u8, width: *u32, height: *u32, bitDepth: *u8, colorType: *
     interlaceMethod.* = data[12];
 }
 
-fn handleIDAT(data: []u8, out: std.ArrayList(u8)) void{
-
+fn handleIDAT(data: []u8, out: std.ArrayList(u8)) !void{
+    var stream = std.io.fixedBufferStream(data).reader();
 }
 
 test "Should work" {
-    const data = try std.fs.cwd().readFileAlloc(testing.allocator, "Lenna_(test_image).png", 999999);
+    const data = try std.f.cwd().readFileAlloc(testing.allocator, "Lenna_(test_image).png", 999999);
     defer testing.allocator.free(data);
 
     var width: u32 = 0;
