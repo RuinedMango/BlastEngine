@@ -455,7 +455,7 @@ pub fn paramOverride(func: []const u8, paramIndex: u8) ?[]const u8 {
             else => null,
         };
     }
-    if (std.mem.eql(u8, func, "DrawElements")) {
+    if (std.mem.eql(u8, func, "DrawElements") or std.mem.eql(u8, func, "DrawElementsInstanced")) {
         return switch (paramIndex) {
             3 => "usize",
             else => null,
